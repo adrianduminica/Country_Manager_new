@@ -239,13 +239,13 @@ public:
         : name(std::move(name)), ideology(std::move(ideology)),
           provinces(std::move(provs)), resources(res) {}
 
-    [[nodiscard]] int totalCiv() const { int c=0; for (auto& p:provinces) c+=p.getCiv(); return c; }
-    [[nodiscard]] int totalMil() const { int m=0; for (auto& p:provinces) m+=p.getMil(); return m; }
-    [[nodiscard]] int totalOil() const { int o=0; for (auto& p:provinces) o+=p.getOilReserve(); return o; }
+    [[nodiscard]] int totalCiv() const { int c=0; for (const auto& p:provinces) c+=p.getCiv(); return c; }
+    [[nodiscard]] int totalMil() const { int m=0; for (const auto& p:provinces) m+=p.getMil(); return m; }
+    [[nodiscard]] int totalOil() const { int o=0; for (const auto& p:provinces) o+=p.getOilReserve(); return o; }
 
     // cu cost explicit
     bool addProductionLine(EquipmentType type, int factories, double cost) {
-        int used = 0; for (auto& l: milLines) used += l.getFactories();
+        int used = 0; for (const auto& l: milLines) used += l.getFactories();
         if (used + factories > totalMil()) {
             std::cerr << "[!] Not enough military factories for new line in " << name << ".\n";
             return false;
@@ -260,7 +260,7 @@ public:
     }
 
     [[nodiscard]] bool checkMilitaryFactories() const {
-        int used = 0; for (auto& l: milLines) used += l.getFactories();
+        int used = 0; for (const auto& l: milLines) used += l.getFactories();
         return used <= totalMil();
     }
 
@@ -272,7 +272,7 @@ public:
         int fuelGain = totalOil() * OIL_TO_FUEL_RATIO + refineries * REFINERY_FUEL_BONUS_PER_DAY;
         resources.add(fuelGain, 0);
 
-        for (auto& l : milLines) {
+        for (const auto& l : milLines) {
             int used = std::min(l.getFactories(), totalMil());
             double totalPPD = used * MIL_FACTORY_OUTPUT_PER_DAY;
             auto units = static_cast<long long>(std::floor(totalPPD / l.getUnitCost()));
@@ -294,10 +294,10 @@ public:
         ss << "  Equipment: " << equipment << "\n";
         if (!milLines.empty()) {
             ss << "  Military Lines:\n";
-            for (auto& l : milLines) ss << "    - " << l << "\n";
+            for (const auto& l : milLines) ss << "    - " << l << "\n";
         }
         ss << "  Provinces:\n";
-        for (auto& p : provinces) ss << "    - " << p << "\n";
+        for (const auto& p : provinces) ss << "    - " << p << "\n";
         return ss.str();
     }
 };
