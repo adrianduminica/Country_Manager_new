@@ -9,7 +9,7 @@
 #include <ctime>
 
 // ============================================================================
-//                               ResourceStockpile
+//                               ResourceStockpile (dinamic)
 // ============================================================================
 class ResourceStockpile {
     int fuel;
@@ -28,7 +28,9 @@ public:
         manpower = clampNonNeg(manpower + dManpower);
     }
     std::string toString() const {
-        std::ostringstream ss; ss << "Fuel=" << fuel << ", Manpower=" << manpower; return ss.str();
+        std::ostringstream ss;
+        ss << "Fuel=" << getFuel() << ", Manpower=" << getManpower();
+        return ss.str();
     }
 };
 std::ostream& operator<<(std::ostream& os, const ResourceStockpile& r) { return os << r.toString(); }
@@ -51,51 +53,80 @@ public:
 
     std::string toString() const {
         std::ostringstream ss;
-        ss << "Guns="<<guns<<", Artillery="<<artillery<<", AA="<<antiAir<<", CAS="<<cas;
+        ss << "Guns="<< getGuns()
+           << ", Artillery="<< getArtillery()
+           << ", AA="<< getAntiAir()
+           << ", CAS="<< getCAS();
         return ss.str();
     }
 };
-std::ostream& operator<<(std::ostream& os, const EquipmentStockpile& e){ return os<<e.toString(); }
+std::ostream& operator<<(std::ostream& os,const EquipmentStockpile& e){ return os<<e.toString(); }
 
 // ============================================================================
 //                                   Province
 // ============================================================================
 class Province {
     std::string name;
-    int population{}, civFactories{}, milFactories{}, infrastructure{}, steelReserve{}, oilReserve{};
+    int population{}, civFactories{}, milFactories{}, infrastructure{};
     int dockyards{}, airfields{};
     int armyRF{}, navalRF{}, aerialRF{}, nuclearRF{};
+
+    // --- static resources ---
+    int steel{}, tungsten{}, aluminum{}, chromium{}, oil{};
+
 public:
     Province()=default;
-    Province(std::string name,int pop,int civ,int mil,int infra,int steel,int oil)
+    Province(std::string name,int pop,int civ,int mil,int infra,
+             int steel,int tungsten,int aluminum,int chromium,int oil)
         : name(std::move(name)),population(pop),civFactories(civ),milFactories(mil),
-          infrastructure(infra),steelReserve(steel),oilReserve(oil){}
+          infrastructure(infra),
+          steel(steel),tungsten(tungsten),aluminum(aluminum),chromium(chromium),oil(oil){}
 
     const std::string& getName()const{return name;}
     int getPopulation()const{return population;}
-    int getCiv()const{return civFactories;} int getMil()const{return milFactories;}
-    int getInfra()const{return infrastructure;} int getSteelReserve()const{return steelReserve;}
-    int getOilReserve()const{return oilReserve;}
-    int getDockyards()const{return dockyards;} int getAirfields()const{return airfields;}
-    int getArmyRF()const{return armyRF;} int getNavalRF()const{return navalRF;}
-    int getAerialRF()const{return aerialRF;} int getNuclearRF()const{return nuclearRF;}
+    int getCiv()const{return civFactories;}
+    int getMil()const{return milFactories;}
+    int getInfra()const{return infrastructure;}
+    int getDockyards()const{return dockyards;}
+    int getAirfields()const{return airfields;}
+    int getArmyRF()const{return armyRF;}
+    int getNavalRF()const{return navalRF;}
+    int getAerialRF()const{return aerialRF;}
+    int getNuclearRF()const{return nuclearRF;}
+
+    // --- resources ---
+    int getSteel()const{return steel;}
+    int getTungsten()const{return tungsten;}
+    int getAluminum()const{return aluminum;}
+    int getChromium()const{return chromium;}
+    int getOil()const{return oil;}
 
     void addCiv(int x){ civFactories=std::max(0,civFactories+x);}
     void addMil(int x){ milFactories=std::max(0,milFactories+x);}
     void addInfra(int x){ infrastructure=std::min(10,std::max(0,infrastructure+x));}
     void addDockyard(int x){ dockyards+=x; }
     void addAirfield(int x){ airfields+=x; }
-    void placeArmyRF(){ armyRF=1; } void placeNavalRF(){ navalRF=1; }
-    void placeAerialRF(){ aerialRF=1; } void placeNuclearRF(){ nuclearRF=1; }
+    void placeArmyRF(){ armyRF=1; }
+    void placeNavalRF(){ navalRF=1; }
+    void placeAerialRF(){ aerialRF=1; }
+    void placeNuclearRF(){ nuclearRF=1; }
 
     std::string toString() const {
         std::ostringstream ss;
-        ss<<"Province("<<name<<") pop="<<population
-          <<", CIV="<<civFactories<<", MIL="<<milFactories
-          <<", INFRA="<<infrastructure<<", DOCKYARDS="<<dockyards
-          <<", AIRFIELDS="<<airfields
-          <<", FACILITIES[Army="<<armyRF<<",Naval="<<navalRF
-          <<",Aerial="<<aerialRF<<",Nuclear="<<nuclearRF<<"]";
+        ss<<"Province("<< getName() <<") pop="<< getPopulation()
+          <<", CIV="<< getCiv() <<", MIL="<< getMil()
+          <<", INFRA="<< getInfra()
+          <<", RES[Steel="<< getSteel()
+          <<", Tung="<< getTungsten()
+          <<", Alu="<< getAluminum()
+          <<", Chr="<< getChromium()
+          <<", Oil="<< getOil() << "]"
+          <<", DOCKYARDS="<< getDockyards()
+          <<", AIRFIELDS="<< getAirfields()
+          <<", FACILITIES[Army="<< getArmyRF()
+          <<",Naval="<< getNavalRF()
+          <<",Aerial="<< getAerialRF()
+          <<",Nuclear="<< getNuclearRF() <<"]";
         return ss.str();
     }
 };
@@ -126,7 +157,7 @@ public:
         const char* tn=(type==EquipmentType::Gun?"Gun":
                         type==EquipmentType::Artillery?"Artillery":
                         type==EquipmentType::AntiAir?"AA":"CAS");
-        std::ostringstream ss; ss<<tn<<" [factories="<<factoriesAssigned<<", unitCost="<<unitCost<<"]"; return ss.str();
+        std::ostringstream ss; ss<<tn<<" [factories="<<getFactories()<<", unitCost="<<getUnitCost()<<"]"; return ss.str();
     }
 };
 std::ostream& operator<<(std::ostream& os,const ProductionLine&p){return os<<p.toString();}
@@ -157,13 +188,14 @@ public:
 
     std::string toString() const {
         std::ostringstream ss;
-        ss<<"["<<(int)type<<"] "<<remainingBP<<"/"<<totalCost<<" BP left in province "<<provinceIndex;
+        ss<<"["<<(int)getType()<<"] "<< getRemainingBP() <<"/"<< getTotalCost()
+          <<" BP left in province "<< getProvinceIndex();
         return ss.str();
     }
 };
 
 // ============================================================================
-//                             Focus Tree System (encapsulated Focus)
+//                             Focus Tree System
 // ============================================================================
 enum class FocusEffectType { AddCiv, AddMil, AddInfra, AddDockyard };
 
@@ -242,12 +274,16 @@ public:
     Country(std::string n,std::string id,std::vector<Province>p,ResourceStockpile r)
         :name(std::move(n)),ideology(std::move(id)),provinces(std::move(p)),resources(r){}
 
-    int totalCiv()const{int s=0;for(auto&p:provinces)s+=p.getCiv();return s;}
-    int totalMil()const{int s=0;for(auto&p:provinces)s+=p.getMil();return s;}
-    int totalOil()const{int s=0;for(auto&p:provinces)s+=p.getOilReserve();return s;}
+    int totalCiv()const{int s=0;for(const auto& p:provinces)s+=p.getCiv();return s;}
+    int totalMil()const{int s=0;for(const auto& p:provinces)s+=p.getMil();return s;}
+    int totalOil()const{int s=0;for(const auto& p:provinces)s+=p.getOil();return s;}
+    int totalSteel()const{int s=0;for(const auto& p:provinces)s+=p.getSteel();return s;}
+    int totalTungsten()const{int s=0;for(const auto& p:provinces)s+=p.getTungsten();return s;}
+    int totalAluminum()const{int s=0;for(const auto& p:provinces)s+=p.getAluminum();return s;}
+    int totalChromium()const{int s=0;for(const auto& p:provinces)s+=p.getChromium();return s;}
 
     void addProductionLine(EquipmentType t,int factories){ milLines.emplace_back(t,factories,-1.0); }
-    void startFocus(int index){ focusTree.startFocus(index); }
+    void startFocus(int index){ (void)focusTree.startFocus(index); }
 
     void addConstruction(BuildingType type, int provinceIndex) {
         double cost = 0;
@@ -297,7 +333,7 @@ public:
 
         // focus
         int effRaw = focusTree.tickRaw();
-        if (effRaw != -1) {
+        if (effRaw != -1 && !provinces.empty()) {
             int i = std::rand() % provinces.size();
             switch(static_cast<FocusEffectType>(effRaw)){
                 case FocusEffectType::AddCiv:      provinces[i].addCiv(1);      break;
@@ -312,9 +348,15 @@ public:
         std::ostringstream ss;
         ss<<"Country("<<name<<", "<<ideology<<")\n";
         ss<<"  Factories: CIV="<<totalCiv()<<" | MIL="<<totalMil()<<"\n";
-        ss<<"  Constructions in progress: "<<constructions.size()<<"\n";
-        ss<<"  Focus: active="<<focusTree.getActiveFocusName()<<"\n";
+        ss<<"  Resources: Steel="<<totalSteel()
+          <<", Tungsten="<<totalTungsten()
+          <<", Aluminum="<<totalAluminum()
+          <<", Chromium="<<totalChromium()
+          <<", Oil="<<totalOil()<<"\n";
+        ss<<"  Focus: "<<focusTree.getActiveFocusName()<<"\n";
         ss<<"  Equipment: "<<equipment<<"\n";
+        ss<<"  Stockpile: "<<resources<<"\n";
+        ss<<"  Constructions: "<<constructions.size()<<"\n";
         ss<<"  Provinces:\n";
         for(const auto& p: provinces) ss<<"    - "<<p<<"\n";
         return ss.str();
@@ -329,21 +371,21 @@ int main(){
     std::srand((unsigned)std::time(nullptr));
 
     // --- Romania ---
-    Province p1("Wallachia",1800,3,3,6,2,3);
-    Province p2("Moldavia",1500,2,2,5,5,1);
-    Province p3("Transylvania",1600,2,1,7,8,2);
+    Province p1("Wallachia",1800,3,3,6,5,3,4,1,3);
+    Province p2("Moldavia",1500,2,2,5,4,2,3,1,2);
+    Province p3("Transylvania",1600,2,1,7,8,5,6,3,1);
     Country Romania("Romania","Democratic",{p1,p2,p3},ResourceStockpile(0,100));
     Romania.addProductionLine(EquipmentType::Gun,2);
     Romania.startFocus(0);
-    Romania.addConstruction(BuildingType::Mil, 1); // construiește o fabrică militară în Moldavia
+    Romania.addConstruction(BuildingType::Mil, 1);
 
     // --- Hungary ---
-    Province h1("Alfold",1400,2,2,6,4,2);
-    Province h2("Transdanubia",1200,2,1,6,3,1);
+    Province h1("Alfold",1400,2,2,6,4,2,3,1,2);
+    Province h2("Transdanubia",1200,2,1,6,3,2,2,1,1);
     Country Hungary("Hungary","Authoritarian",{h1,h2},ResourceStockpile(0,80));
     Hungary.addProductionLine(EquipmentType::Artillery,1);
     Hungary.startFocus(1);
-    Hungary.addConstruction(BuildingType::Civ, 0); // fabrică civilă în Alfold
+    Hungary.addConstruction(BuildingType::Civ, 0);
 
     std::cout<<"=== INITIAL STATE ===\n"<<Romania<<"\n"<<Hungary<<"\n";
     for(int d=1; d<=40; ++d){ Romania.simulateDay(); Hungary.simulateDay(); }
