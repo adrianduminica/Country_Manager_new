@@ -189,7 +189,7 @@ class Country {
     static constexpr int MIL_FACTORY_OUTPUT_PER_DAY = 1000;
     static constexpr int OIL_TO_FUEL_RATIO = 5;
     static constexpr int REFINERY_FUEL_BONUS_PER_DAY = 10;
-    static constexpr double CIV_OUTPUT_PER_DAY = 1.0;
+    // (removed) static constexpr double CIV_OUTPUT_PER_DAY = 1.0;
 
 public:
     Country(std::string name, std::string ideology, std::vector<Province> provs, ResourceStockpile res)
@@ -262,48 +262,9 @@ std::ostream& operator<<(std::ostream& os, const Country& c) {
 }
 
 // ============================================================================
-//                        LINTER SATISFACTION (no-op touches)
-// ============================================================================
-// Folosit pentru a marca drept "utilizate" funcțiile pe care le vei folosi
-// mai târziu; nu modifică starea simulării.
-static void _satisfy_linter() {
-    ResourceStockpile rs(1, 2);
-    (void)rs.getFuel();
-    (void)rs.getManpower();
-
-    EquipmentStockpile es;
-    (void)es.getGuns();
-    (void)es.getArtillery();
-    (void)es.getAntiAir();
-    (void)es.getCAS();
-
-    Province pv("Lint", 0, 0, 0, 0, 0, 0);
-    (void)pv.getName();
-    (void)pv.getPopulation();
-    (void)pv.getCiv();
-    (void)pv.getMil();
-    (void)pv.getInfra();
-    (void)pv.getSteelReserve();
-    (void)pv.getOilReserve();
-    // Mutatori apelați cu 0 -> efect nul
-    pv.addCiv(0);
-    pv.addMil(0);
-    pv.addInfra(0);
-
-    ProductionLine pl(EquipmentType::Gun, 0, 0.0);
-    (void)pl.getType();
-    (void)pl.getFactories();
-    (void)pl.getUnitCost();
-}
-
-// ============================================================================
 //                                      MAIN
 // ============================================================================
 int main() {
-#ifndef NDEBUG
-    _satisfy_linter(); // liniștește clang-tidy/cppcheck fără a afecta simularea
-#endif
-
     // --- Romania ---
     Province p1("Wallachia",    1800, 3, 3, 6, 2, 3);
     Province p2("Moldavia",     1500, 2, 2, 5, 5, 1);
