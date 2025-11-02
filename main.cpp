@@ -187,7 +187,7 @@ class ProductionLine {
         }
         return DEFAULT_COST_GUN;
     }
-
+//
 public:
     ProductionLine(EquipmentType type, int factories, double cost)
         : type(type),
