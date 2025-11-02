@@ -20,8 +20,8 @@ public:
     ResourceStockpile(int fuel, int manpower)
         : fuel(fuel), manpower(manpower) {}
 
-    [[nodiscard]] int getFuel() const { return fuel; }
-    [[nodiscard]] int getManpower() const { return manpower; }
+    [[maybe_unused]] int getFuel() const { return fuel; }
+    [[maybe_unused]] int getManpower() const { return manpower; }
 
     void add(int dFuel, int dManpower) {
         fuel     = clampNonNeg(fuel     + dFuel);
@@ -54,10 +54,10 @@ public:
     void addAntiAir(long long n)   { if (n>0) antiAir   += n; }
     void addCAS(long long n)       { if (n>0) cas       += n; }
 
-    [[nodiscard]] long long getGuns() const      { return guns; }
-    [[nodiscard]] long long getArtillery() const { return artillery; }
-    [[nodiscard]] long long getAntiAir() const   { return antiAir; }
-    [[nodiscard]] long long getCAS() const       { return cas; }
+    [[maybe_unused]] long long getGuns() const      { return guns; }
+    [[maybe_unused]] long long getArtillery() const { return artillery; }
+    [[maybe_unused]] long long getAntiAir() const   { return antiAir; }
+    [[maybe_unused]] long long getCAS() const       { return cas; }
 
     [[nodiscard]] std::string toString() const {
         std::ostringstream ss;
@@ -94,17 +94,17 @@ public:
           infrastructure(infra),
           steelReserve(steelReserve), oilReserve(oilReserve) {}
 
-    [[nodiscard]] const std::string& getName() const { return name; }
-    [[nodiscard]] int getPopulation()  const { return population; }
-    [[nodiscard]] int getCiv()         const { return civFactories; }
-    [[nodiscard]] int getMil()         const { return milFactories; }
-    [[nodiscard]] int getInfra()       const { return infrastructure; }
-    [[nodiscard]] int getSteelReserve()const { return steelReserve; }
-    [[nodiscard]] int getOilReserve()  const { return oilReserve; }
+    [[maybe_unused]] const std::string& getName() const { return name; }
+    [[maybe_unused]] int getPopulation()  const { return population; }
+    [[maybe_unused]] int getCiv()         const { return civFactories; }
+    [[maybe_unused]] int getMil()         const { return milFactories; }
+    [[maybe_unused]] int getInfra()       const { return infrastructure; }
+    [[maybe_unused]] int getSteelReserve()const { return steelReserve; }
+    [[maybe_unused]] int getOilReserve()  const { return oilReserve; }
 
-    void addCiv(int x){ civFactories = std::max(0, civFactories + x); }
-    void addMil(int x){ milFactories = std::max(0, milFactories + x); }
-    void addInfra(int x){ infrastructure = std::min(10, std::max(0, infrastructure + x)); }
+    [[maybe_unused]] void addCiv(int x){ civFactories = std::max(0, civFactories + x); }
+    [[maybe_unused]] void addMil(int x){ milFactories = std::max(0, milFactories + x); }
+    [[maybe_unused]] void addInfra(int x){ infrastructure = std::min(10, std::max(0, infrastructure + x)); }
 
     [[nodiscard]] std::string toString() const {
         std::ostringstream ss;
@@ -139,12 +139,12 @@ public:
         : type(type), provinceIndex(province_index),
           remainingBP(remaining_bp), baseCostBP(base_cost_bp) {}
 
-    [[nodiscard]] BuildType getType() const { return type; }
-    [[nodiscard]] int getProvinceIndex() const { return provinceIndex; }
-    [[nodiscard]] double getRemainingBP() const { return remainingBP; }
-    [[nodiscard]] double getBaseCostBP() const { return baseCostBP; }
+    [[maybe_unused]] BuildType getType() const { return type; }
+    [[maybe_unused]] int getProvinceIndex() const { return provinceIndex; }
+    [[maybe_unused]] double getRemainingBP() const { return remainingBP; }
+    [[maybe_unused]] double getBaseCostBP() const { return baseCostBP; }
 
-    void setRemainingBP(double bp) { remainingBP = bp; }
+    [[maybe_unused]] void setRemainingBP(double bp) { remainingBP = bp; }
 
     [[nodiscard]] std::string toString() const {
         const char* tn = type==BuildType::Infra?"INFRA":
@@ -172,7 +172,7 @@ class ProductionLine {
     int factoriesAssigned;
     double unitCost;
 
-    // costuri implicite
+    // implicit equipment costs
     static constexpr double DEFAULT_COST_GUN       = 10.0;
     static constexpr double DEFAULT_COST_ARTILLERY = 50.0;
     static constexpr double DEFAULT_COST_ANTIAIR   = 40.0;
@@ -187,19 +187,19 @@ class ProductionLine {
         }
         return DEFAULT_COST_GUN;
     }
-//
+
 public:
     ProductionLine(EquipmentType type, int factories, double cost)
         : type(type),
           factoriesAssigned(std::max(0, factories)),
           unitCost(cost > 0 ? cost : defaultCost(type)) {}
 
-    [[nodiscard]] EquipmentType getType() const { return type; }
-    [[nodiscard]] int getFactories() const { return factoriesAssigned; }
-    [[nodiscard]] double getUnitCost() const { return unitCost; }
+    [[maybe_unused]] EquipmentType getType() const { return type; }
+    [[maybe_unused]] int getFactories() const { return factoriesAssigned; }
+    [[maybe_unused]] double getUnitCost() const { return unitCost; }
 
-    void setFactories(int f) { factoriesAssigned = std::max(0, f); }
-    void setUnitCost(double c) { unitCost = (c > 0 ? c : defaultCost(type)); }
+    [[maybe_unused]] void setFactories(int f) { factoriesAssigned = std::max(0, f); }
+    [[maybe_unused]] void setUnitCost(double c) { unitCost = (c > 0 ? c : defaultCost(type)); }
 
     [[nodiscard]] std::string toString() const {
         const char* tn = type==EquipmentType::Gun?"Gun":
@@ -225,14 +225,13 @@ class Country {
     std::vector<Province> provinces;
     ResourceStockpile resources;
     EquipmentStockpile equipment;
-    std::vector<ConstructionTask> queue;
     std::vector<ProductionLine> milLines;
     int refineries = 0;
 
     static constexpr int MIL_FACTORY_OUTPUT_PER_DAY = 1000;
     static constexpr int OIL_TO_FUEL_RATIO = 5;
     static constexpr int REFINERY_FUEL_BONUS_PER_DAY = 10;
-    static constexpr double CIV_OUTPUT_PER_DAY = 1.0;
+    [[maybe_unused]] static constexpr double CIV_OUTPUT_PER_DAY = 1.0;
 
 public:
     Country(std::string name, std::string ideology, std::vector<Province> provs, ResourceStockpile res)
@@ -243,8 +242,7 @@ public:
     [[nodiscard]] int totalMil() const { int m=0; for (const auto& p:provinces) m+=p.getMil(); return m; }
     [[nodiscard]] int totalOil() const { int o=0; for (const auto& p:provinces) o+=p.getOilReserve(); return o; }
 
-    // cu cost explicit
-    bool addProductionLine(EquipmentType type, int factories, double cost) {
+    bool addProductionLine(EquipmentType type, int factories, double cost = -1.0) {
         int used = 0; for (const auto& l: milLines) used += l.getFactories();
         if (used + factories > totalMil()) {
             std::cerr << "[!] Not enough military factories for new line in " << name << ".\n";
@@ -254,20 +252,14 @@ public:
         return true;
     }
 
-    // fără cost -> folosește implicit
-    bool addProductionLine(EquipmentType type, int factories) {
-        return addProductionLine(type, factories, -1.0);
-    }
-
     [[nodiscard]] bool checkMilitaryFactories() const {
         int used = 0; for (const auto& l: milLines) used += l.getFactories();
         return used <= totalMil();
     }
 
     void simulateDay() {
-        if (!checkMilitaryFactories()) {
+        if (!checkMilitaryFactories())
             std::cerr << "[!] Factory overuse detected in " << name << ".\n";
-        }
 
         int fuelGain = totalOil() * OIL_TO_FUEL_RATIO + refineries * REFINERY_FUEL_BONUS_PER_DAY;
         resources.add(fuelGain, 0);
