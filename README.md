@@ -1,16 +1,7 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# Country_Manager
 
-### Important!
-Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
-Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
-în care oferă funcționalități ajutătoare și doar dacă are sens.
 
-O cerință nu se consideră îndeplinită dacă este realizată doar ca o serie de apeluri proxy către cod generat.
-
-### Cerințe modele de limbaj la nivel de semestru
-- [ ] minim o funcționalitate majoritar doar cu LLM
-- [ ] minim 2-3 funcționalități ~50% voi, ~50% LLM-ul
-- [ ] minim 2-3 funcționalități suficient de complicate pe care un LLM nu le poate implementa
+### Country manager este un joc de tip strategie asemantor cu Hearts of Iron 4. Scopul jocului este sa iei decizii despr3e cum iti manageriezi economia, cercetarea si armata tarii pentru a creste cat mai rapid in contextul economico-militar din 1936. Jocul va cntine si evenimente la intamplare care iti vor modela parcursul.
 
 ### Tema 0
 
