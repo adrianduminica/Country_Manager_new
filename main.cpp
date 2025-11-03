@@ -277,7 +277,30 @@ class Country {
 public:
     Country(std::string n,std::string id,std::vector<Province>p,ResourceStockpile r)
         :name(std::move(n)),ideology(std::move(id)),provinces(std::move(p)),resources(r){}
+    Country(const Country& other)
+        : name(other.name),
+          ideology(other.ideology),
+          provinces(other.provinces),
+          resources(other.resources),
+          equipment(other.equipment),
+          milLines(other.milLines),
+          constructions(other.constructions),
+          focusTree(other.focusTree) {}
 
+    Country& operator=(const Country& other) {
+        if (this != &other) {
+            name = other.name;
+            ideology = other.ideology;
+            provinces = other.provinces;
+            resources = other.resources;
+            equipment = other.equipment;
+            milLines = other.milLines;
+            constructions = other.constructions;
+            focusTree = other.focusTree;
+        }
+        return *this;
+    }
+    ~Country() = default;
     int totalCiv()const{int s=0;for(const auto& p:provinces)s+=p.getCiv();return s;}
     int totalMil()const{int s=0;for(const auto& p:provinces)s+=p.getMil();return s;}
     int totalOil()const{int s=0;for(const auto& p:provinces)s+=p.getOil();return s;}
