@@ -107,7 +107,7 @@ public:
     void addDockyard(int x){ dockyards+=x; }
     void addAirfield(int x){ airfields+=x; }
 
-    // funcții de plasare RF nefolosite acum
+    // funcții de plasare RF nefolosite deocamdata
     /*
     void placeArmyRF(){ armyRF=1; }
     void placeNavalRF(){ navalRF=1; }
