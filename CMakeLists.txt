@@ -71,6 +71,8 @@ add_executable(${PROJECT_NAME}
         EquipmentStockpile.h
         ResourceStockpile.cpp
         ResourceStockpile.h
+        Interface.cpp
+        Interface.h
 )
 
 include(cmake/CompilerFlags.cmake)
