@@ -52,7 +52,7 @@ class Interface {
                                     StatKind kind);
 
 public:
-    Interface(Engine& eng, const std::string& title = "Country Manager");
+    explicit Interface(Engine& eng, const std::string& title = "Country Manager UI");
     void run();
 };
 
