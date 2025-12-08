@@ -1,4 +1,5 @@
 #include "Interface.h"
+#include "GameExceptions.h"
 #include <iostream>
 
 Interface::Interface(Engine& eng, const std::string& title)
@@ -9,8 +10,9 @@ Interface::Interface(Engine& eng, const std::string& title)
     window.setFramerateLimit(60);
 
     if (!mapTexture.loadFromFile("images/harta.png")) {
-        std::cerr << "Eroare: Nu se poate incarca images/harta.png\n";
+        throw AssetLoadException("Nu se poate incarca images/harta.png");
     }
+
     mapSprite.setTexture(mapTexture);
     float scaleX = static_cast<float>(desktop.width)  / mapTexture.getSize().x;
     float scaleY = static_cast<float>(desktop.height) / mapTexture.getSize().y;

@@ -75,6 +75,8 @@ add_executable(${PROJECT_NAME}
         Interface.h
         ResourceBase.cpp
         ResourceBase.h
+        GameExceptions.cpp
+        GameExceptions.h
 )
 
 include(cmake/CompilerFlags.cmake)

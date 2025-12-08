@@ -1,4 +1,5 @@
 #include "Country.h"
+#include "GameExceptions.h"
 #include <sstream>
 #include <cmath>
 #include <cstdlib>
@@ -86,7 +87,16 @@ void Country::startFocus(int index) {
     (void)focusTree.startFocus(index);
 }
 
-void Country::addConstruction(BuildingType type, int provinceIndex) {
+void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
+    if (count < 0)
+        throw InvalidConstructionCountException("Numar invalid constructii", count);
+
+    if (count == 0)
+        return;
+
+    if (provinceIndex < 0 || provinceIndex >= provinces.size())
+        throw InvalidProvinceIndexException("Index provincie invalid", provinceIndex);
+
     double cost = 0;
     switch (type) {
         case BuildingType::Civ:      cost = 100; break;
@@ -95,7 +105,10 @@ void Country::addConstruction(BuildingType type, int provinceIndex) {
         case BuildingType::Dockyard: cost = 150; break;
         default:                     cost = 200; break;
     }
-    constructions.emplace_back(type, provinceIndex, cost);
+
+    for (int i = 0; i < count; ++i) {
+        constructions.emplace_back(type, provinceIndex, cost);
+    }
 }
 
 void Country::simulateDay() {
@@ -120,11 +133,13 @@ void Country::simulateDay() {
     }
 
     double dailyBP = totalCiv() * CIV_OUTPUT_PER_DAY;
-    for (auto it = constructions.begin(); it != constructions.end();) {
-        if (it->progress(dailyBP)) {
-            int idx = it->getProvinceIndex();
+
+    if (!constructions.empty()) {
+        Construction& c = constructions.front();
+        if (c.progress(dailyBP)) {
+            int idx = c.getProvinceIndex();
             if (idx >= 0 && idx < static_cast<int>(provinces.size())) {
-                switch (it->getType()) {
+                switch (c.getType()) {
                     case BuildingType::Civ:      provinces[idx].addCiv(1);      break;
                     case BuildingType::Mil:      provinces[idx].addMil(1);      break;
                     case BuildingType::Infra:    provinces[idx].addInfra(1);    break;
@@ -132,9 +147,7 @@ void Country::simulateDay() {
                     default:                     provinces[idx].addAirfield(1); break;
                 }
             }
-            it = constructions.erase(it);
-        } else {
-            ++it;
+            constructions.erase(constructions.begin());
         }
     }
 

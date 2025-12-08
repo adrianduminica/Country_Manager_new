@@ -46,7 +46,9 @@ public:
 
     void addProductionLine(EquipmentType t, int factories);
     void startFocus(int index);
-    void addConstruction(BuildingType type, int provinceIndex);
+
+    void addConstruction(BuildingType type, int provinceIndex, int count = 1);
+
     void simulateDay();
 
     std::string toString() const;

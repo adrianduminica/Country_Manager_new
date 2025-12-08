@@ -5,21 +5,19 @@
 #include "Country.h"
 
 class Engine {
+    std::vector<Country> countries;
+    int day = 0;
+
 public:
     Engine();
 
-    void init();
-
     void simulateOneDay();
 
-    int getDay() const;
-
-    std::vector<Country>&       getCountries();
-    const std::vector<Country>& getCountries() const;
+    const std::vector<Country>& getCountries() const { return countries; }
+    int getDay() const { return day; }
 
 private:
-    std::vector<Country> countries;
-    int day;
+    void init();
 };
 
-#endif // ENGINE_H
+#endif

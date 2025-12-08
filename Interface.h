@@ -2,9 +2,8 @@
 #define INTERFACE_H
 
 #include <SFML/Graphics.hpp>
-#include <string>
 #include <vector>
-
+#include <string>
 #include "Engine.h"
 
 enum class StatKind {
@@ -13,10 +12,10 @@ enum class StatKind {
 };
 
 struct ResourceIconUI {
-    StatKind   kind;
+    StatKind kind;
     sf::Sprite icon;
-    sf::Text   value;
-    int        lastValue = -1;
+    sf::Text value;
+    int lastValue;
 };
 
 struct ProvinceUI {
@@ -24,57 +23,37 @@ struct ProvinceUI {
 };
 
 class Interface {
-public:
-    Interface(Engine& engine, const std::string& title = "Country Manager UI");
-    void run();
-
-private:
     Engine& engine;
     sf::RenderWindow window;
 
     sf::Texture mapTexture;
-    sf::Sprite  mapSprite;
+    sf::Sprite mapSprite;
 
     sf::Font font;
+    sf::Text dayText;
 
-    sf::Texture steelTex;
-    sf::Texture tungstenTex;
-    sf::Texture aluminumTex;
-    sf::Texture chromiumTex;
-    sf::Texture oilTex;
-    sf::Texture civTex;
-    sf::Texture milTex;
-    sf::Texture infraTex;
-    sf::Texture dockyardTex;
-    sf::Texture airfieldTex;
+    sf::Texture steelTex, tungstenTex, aluminumTex, chromiumTex, oilTex;
+    sf::Texture civTex, milTex, infraTex, dockyardTex, airfieldTex;
+    sf::Texture manpowerTex, fuelStockTex;
 
-    sf::Texture manpowerTex;
-    sf::Texture fuelStockTex;
+    sf::Sprite roFuelSprite, roManpowerSprite;
+    sf::Sprite huFuelSprite, huManpowerSprite;
+    sf::Text roFuelText, roManpowerText;
+    sf::Text huFuelText, huManpowerText;
 
     std::vector<std::vector<ProvinceUI>> provinceUI;
 
-    sf::Text dayText;
-
-    sf::Sprite roFuelSprite;
-    sf::Sprite roManpowerSprite;
-    sf::Text   roFuelText;
-    sf::Text   roManpowerText;
-    sf::Text   roLabel;
-
-    sf::Sprite huFuelSprite;
-    sf::Sprite huManpowerSprite;
-    sf::Text   huFuelText;
-    sf::Text   huManpowerText;
-    sf::Text   huLabel;
-
     void handleEvents();
-    void updateUI();
     void render();
+    void updateUI();
     void setupProvinceUI();
-
     sf::Vector2f getIconPositionFor(const std::string& countryName,
                                     const std::string& provinceName,
                                     StatKind kind);
+
+public:
+    Interface(Engine& eng, const std::string& title = "Country Manager");
+    void run();
 };
 
 #endif
