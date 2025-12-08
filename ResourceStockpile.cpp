@@ -26,7 +26,7 @@ std::string ResourceStockpile::toString() const {
     return ss.str();
 }
 
-// operator global (non-membru) folosit la std::cout << r;
+
 std::ostream& operator<<(std::ostream& os, const ResourceStockpile& r) {
     return os << r.toString();
 }

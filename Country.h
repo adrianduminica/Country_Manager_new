@@ -52,6 +52,9 @@ public:
     void simulateDay();
 
     std::string toString() const;
+
+    const std::string& getName() const { return name; }
+    const std::vector<Province>& getProvinces() const { return provinces; }
 };
 
 std::ostream& operator<<(std::ostream& os, const Country& c);

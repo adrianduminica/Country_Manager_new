@@ -3,9 +3,9 @@
 
 int main() {
     Engine engine;
-    engine.run();
+    engine.init();
 
-    Interface ui("Country Manager UI");
+    Interface ui(engine, "Country Manager UI");
     ui.run();
 
     return 0;

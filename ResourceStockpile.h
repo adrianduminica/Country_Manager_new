@@ -21,7 +21,6 @@ public:
     std::string toString() const;
 };
 
-// operator global de inserare în stream
 std::ostream& operator<<(std::ostream& os, const ResourceStockpile& r);
 
 #endif // RESOURCE_STOCKPILE_H
