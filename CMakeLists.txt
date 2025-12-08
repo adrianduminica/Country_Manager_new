@@ -15,6 +15,7 @@ include(cmake/Options.cmake)
 
 ###############################################################################
 
+
 # external dependencies with FetchContent
 
 include(FetchContent)
@@ -54,6 +55,22 @@ add_executable(${PROJECT_NAME}
     main.cpp
     generated/src/Helper.cpp
     env_fixes.h
+        Engine.cpp
+        Engine.h
+        Country.cpp
+        Country.h
+        FocusTree.cpp
+        FocusTree.h
+        Construction.cpp
+        Construction.h
+        ProductionLine.cpp
+        ProductionLine.h
+        Province.cpp
+        Province.h
+        EquipmentStockpile.cpp
+        EquipmentStockpile.h
+        ResourceStockpile.cpp
+        ResourceStockpile.h
 )
 
 include(cmake/CompilerFlags.cmake)
