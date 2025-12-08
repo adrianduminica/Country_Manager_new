@@ -94,7 +94,8 @@ void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
     if (count == 0)
         return;
 
-    if (provinceIndex < 0 || provinceIndex >= provinces.size())
+    if (provinceIndex < 0 ||
+    static_cast<std::size_t>(provinceIndex) >= provinces.size())
         throw InvalidProvinceIndexException("Index provincie invalid", provinceIndex);
 
     double cost = 0;
