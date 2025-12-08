@@ -46,17 +46,17 @@ public:
 
     void addProductionLine(EquipmentType t, int factories);
     void startFocus(int index);
-
     void addConstruction(BuildingType type, int provinceIndex);
-
     void simulateDay();
 
     std::string toString() const;
 
     const std::string& getName() const { return name; }
     const std::vector<Province>& getProvinces() const { return provinces; }
+
+    const ResourceStockpile& getResourceStockpile() const { return resources; }
 };
 
 std::ostream& operator<<(std::ostream& os, const Country& c);
 
-#endif // COUNTRY_H
+#endif

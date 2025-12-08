@@ -99,11 +99,10 @@ void Country::addConstruction(BuildingType type, int provinceIndex) {
 }
 
 void Country::simulateDay() {
-    // resurse
-    int fuelGain = totalOil() * OIL_TO_FUEL;
-    resources.add(fuelGain, 0);
+    for (const auto& p : provinces) {
+        p.applyResourceEffects(resources);
+    }
 
-    // producție militară
     for (const auto& l : milLines) {
         long long units = static_cast<long long>(
             std::floor((l.getFactories() * MIL_OUTPUT) / l.getUnitCost())
@@ -120,9 +119,8 @@ void Country::simulateDay() {
         }
     }
 
-    // construcții
     double dailyBP = totalCiv() * CIV_OUTPUT_PER_DAY;
-    for (auto it = constructions.begin(); it != constructions.end(); ) {
+    for (auto it = constructions.begin(); it != constructions.end();) {
         if (it->progress(dailyBP)) {
             int idx = it->getProvinceIndex();
             if (idx >= 0 && idx < static_cast<int>(provinces.size())) {
@@ -140,7 +138,6 @@ void Country::simulateDay() {
         }
     }
 
-    // focus
     int effRaw = focusTree.tickRaw();
     if (effRaw != -1 && !provinces.empty()) {
         int i = std::rand() % provinces.size();

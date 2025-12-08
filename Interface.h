@@ -16,6 +16,7 @@ struct ResourceIconUI {
     StatKind   kind;
     sf::Sprite icon;
     sf::Text   value;
+    int        lastValue = -1;
 };
 
 struct ProvinceUI {
@@ -29,7 +30,6 @@ public:
 
 private:
     Engine& engine;
-
     sf::RenderWindow window;
 
     sf::Texture mapTexture;
@@ -48,14 +48,28 @@ private:
     sf::Texture dockyardTex;
     sf::Texture airfieldTex;
 
+    sf::Texture manpowerTex;
+    sf::Texture fuelStockTex;
+
     std::vector<std::vector<ProvinceUI>> provinceUI;
 
     sf::Text dayText;
 
+    sf::Sprite roFuelSprite;
+    sf::Sprite roManpowerSprite;
+    sf::Text   roFuelText;
+    sf::Text   roManpowerText;
+    sf::Text   roLabel;
+
+    sf::Sprite huFuelSprite;
+    sf::Sprite huManpowerSprite;
+    sf::Text   huFuelText;
+    sf::Text   huManpowerText;
+    sf::Text   huLabel;
+
     void handleEvents();
     void updateUI();
     void render();
-
     void setupProvinceUI();
 
     sf::Vector2f getIconPositionFor(const std::string& countryName,
@@ -63,4 +77,4 @@ private:
                                     StatKind kind);
 };
 
-#endif // INTERFACE_H
+#endif

@@ -8,7 +8,6 @@ Interface::Interface(Engine& eng, const std::string& title)
     window.create(desktop, title, sf::Style::Fullscreen);
     window.setFramerateLimit(60);
 
-    // Hartă fullscreen
     if (!mapTexture.loadFromFile("images/harta.png")) {
         std::cerr << "Eroare: Nu se poate incarca images/harta.png\n";
     }
@@ -17,12 +16,10 @@ Interface::Interface(Engine& eng, const std::string& title)
     float scaleY = static_cast<float>(desktop.height) / mapTexture.getSize().y;
     mapSprite.setScale(scaleX, scaleY);
 
-    // Font
     if (!font.loadFromFile("fonts/arial.ttf")) {
         std::cerr << "Eroare: Nu se poate incarca fonts/arial.ttf\n";
     }
 
-    // Timer zile (colț stânga sus)
     dayText.setFont(font);
     dayText.setCharacterSize(24);
     dayText.setFillColor(sf::Color::White);
@@ -31,7 +28,6 @@ Interface::Interface(Engine& eng, const std::string& title)
     dayText.setPosition(20.f, 20.f);
     dayText.setString("Day: 0");
 
-    // Texturi icon-uri
     if (!steelTex.loadFromFile("images/steel.png"))       std::cerr << "Lipseste images/steel.png\n";
     if (!tungstenTex.loadFromFile("images/tungsten.png")) std::cerr << "Lipseste images/tungsten.png\n";
     if (!aluminumTex.loadFromFile("images/aluminum.png")) std::cerr << "Lipseste images/aluminum.png\n";
@@ -44,15 +40,64 @@ Interface::Interface(Engine& eng, const std::string& title)
     if (!dockyardTex.loadFromFile("images/dockyard.png")) std::cerr << "Lipseste images/dockyard.png\n";
     if (!airfieldTex.loadFromFile("images/airfield.png")) std::cerr << "Lipseste images/airfield.png\n";
 
+    if (!manpowerTex.loadFromFile("images/manpower.png"))       std::cerr << "Lipseste images/manpower.png\n";
+    if (!fuelStockTex.loadFromFile("images/fuel_stockpile.png")) std::cerr << "Lipseste images/fuel_stockpile.png\n";
+
+    roFuelSprite.setTexture(fuelStockTex);
+    roFuelSprite.setScale(0.6f, 0.6f);
+    roFuelSprite.setPosition(20.f, 60.f);
+
+    roManpowerSprite.setTexture(manpowerTex);
+    roManpowerSprite.setScale(0.6f, 0.6f);
+    roManpowerSprite.setPosition(20.f, 100.f);
+
+    roFuelText.setFont(font);
+    roFuelText.setCharacterSize(18);
+    roFuelText.setFillColor(sf::Color::White);
+    roFuelText.setOutlineColor(sf::Color::Black);
+    roFuelText.setOutlineThickness(1.f);
+    roFuelText.setPosition(60.f, 60.f);
+    roFuelText.setString("0");
+
+    roManpowerText.setFont(font);
+    roManpowerText.setCharacterSize(18);
+    roManpowerText.setFillColor(sf::Color::White);
+    roManpowerText.setOutlineColor(sf::Color::Black);
+    roManpowerText.setOutlineThickness(1.f);
+    roManpowerText.setPosition(60.f, 100.f);
+    roManpowerText.setString("0");
+
+    huFuelSprite.setTexture(fuelStockTex);
+    huFuelSprite.setScale(0.6f, 0.6f);
+    huFuelSprite.setPosition(220.f, 60.f);
+
+    huManpowerSprite.setTexture(manpowerTex);
+    huManpowerSprite.setScale(0.6f, 0.6f);
+    huManpowerSprite.setPosition(220.f, 100.f);
+
+    huFuelText.setFont(font);
+    huFuelText.setCharacterSize(18);
+    huFuelText.setFillColor(sf::Color::White);
+    huFuelText.setOutlineColor(sf::Color::Black);
+    huFuelText.setOutlineThickness(1.f);
+    huFuelText.setPosition(260.f, 60.f);
+    huFuelText.setString("0");
+
+    huManpowerText.setFont(font);
+    huManpowerText.setCharacterSize(18);
+    huManpowerText.setFillColor(sf::Color::White);
+    huManpowerText.setOutlineColor(sf::Color::Black);
+    huManpowerText.setOutlineThickness(1.f);
+    huManpowerText.setPosition(260.f, 100.f);
+    huManpowerText.setString("0");
+
     setupProvinceUI();
 }
 
-// aici setezi coordonatele exacte pentru fiecare țară / provincie / resursă
 sf::Vector2f Interface::getIconPositionFor(const std::string& countryName,
                                            const std::string& provinceName,
                                            StatKind kind)
 {
-    // EXEMPLU: Romania / Moldavia
     if (countryName == "Romania" && provinceName == "Moldavia") {
         switch (kind) {
             case StatKind::Steel:    return { 1500.f, 1150.f };
@@ -69,7 +114,6 @@ sf::Vector2f Interface::getIconPositionFor(const std::string& countryName,
         }
     }
 
-    // EXEMPLU: Romania / Wallachia
     if (countryName == "Romania" && provinceName == "Wallachia") {
         switch (kind) {
             case StatKind::Steel:    return { 1900.f, 600.f };
@@ -85,8 +129,6 @@ sf::Vector2f Interface::getIconPositionFor(const std::string& countryName,
             case StatKind::Airfield: return { 1940.f, 720.f };
         }
     }
-
-    // EXEMPLU: Romania / Transylvania
     if (countryName == "Romania" && provinceName == "Transylvania") {
         switch (kind) {
             case StatKind::Steel:    return { 1200.f, 450.f };
@@ -103,7 +145,6 @@ sf::Vector2f Interface::getIconPositionFor(const std::string& countryName,
         }
     }
 
-    // EXEMPLU: Hungary / Alfold
     if (countryName == "Hungary" && provinceName == "Alfold") {
         switch (kind) {
             case StatKind::Steel:    return { 300.f, 500.f };
@@ -120,7 +161,6 @@ sf::Vector2f Interface::getIconPositionFor(const std::string& countryName,
         }
     }
 
-    // EXEMPLU: Hungary / Transdanubia
     if (countryName == "Hungary" && provinceName == "Transdanubia") {
         switch (kind) {
             case StatKind::Steel:    return { 650.f, 450.f };
@@ -136,6 +176,7 @@ sf::Vector2f Interface::getIconPositionFor(const std::string& countryName,
             case StatKind::Airfield: return { 690.f, 570.f };
         }
     }
+
 
     return { 50.f, 50.f };
 }
@@ -170,17 +211,17 @@ void Interface::setupProvinceUI() {
                 ui.value.setString("0");
                 ui.value.setPosition(pos.x + 32.f, pos.y + 4.f);
 
+                ui.lastValue = -1;
+
                 pui.resourceIcons.push_back(ui);
             };
 
-            // Resurse
             makeIcon(StatKind::Steel,    steelTex);
             makeIcon(StatKind::Tungsten, tungstenTex);
             makeIcon(StatKind::Aluminum, aluminumTex);
             makeIcon(StatKind::Chromium, chromiumTex);
             makeIcon(StatKind::Oil,      oilTex);
 
-            // Building-uri
             makeIcon(StatKind::Civ,      civTex);
             makeIcon(StatKind::Mil,      milTex);
             makeIcon(StatKind::Infra,    infraTex);
@@ -216,8 +257,33 @@ void Interface::updateUI() {
                     case StatKind::Dockyard: value = p.getDockyards(); break;
                     case StatKind::Airfield: value = p.getAirfields(); break;
                 }
+
+                if (icon.lastValue == -1) {
+                    icon.value.setFillColor(sf::Color::White);
+                } else {
+                    if (value > icon.lastValue) {
+                        icon.value.setFillColor(sf::Color::Green);
+                    } else if (value < icon.lastValue) {
+                        icon.value.setFillColor(sf::Color::Red);
+                    } else {
+                        icon.value.setFillColor(sf::Color::White);
+                    }
+                }
+
+                icon.lastValue = value;
                 icon.value.setString(std::to_string(value));
             }
+        }
+    }
+
+    for (const auto& c : countries) {
+        const auto& stock = c.getResourceStockpile();
+        if (c.getName() == "Romania") {
+            roFuelText.setString(std::to_string(stock.getFuel()));
+            roManpowerText.setString(std::to_string(stock.getManpower()));
+        } else if (c.getName() == "Hungary") {
+            huFuelText.setString(std::to_string(stock.getFuel()));
+            huManpowerText.setString(std::to_string(stock.getManpower()));
         }
     }
 }
@@ -238,7 +304,6 @@ void Interface::render() {
     window.clear();
     window.draw(mapSprite);
 
-    // icon-uri
     for (auto& countryUI : provinceUI) {
         for (auto& pui : countryUI) {
             for (auto& icon : pui.resourceIcons) {
@@ -249,6 +314,16 @@ void Interface::render() {
     }
 
     window.draw(dayText);
+
+    window.draw(roFuelSprite);
+    window.draw(roManpowerSprite);
+    window.draw(roFuelText);
+    window.draw(roManpowerText);
+
+    window.draw(huFuelSprite);
+    window.draw(huManpowerSprite);
+    window.draw(huFuelText);
+    window.draw(huManpowerText);
 
     window.display();
 }
