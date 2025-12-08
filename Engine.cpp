@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "ResourceBase.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -48,6 +49,10 @@ void Engine::init() {
     for (const auto& c : countries) {
         std::cout << c << "\n";
     }
+
+    std::cout << "Total resource objects: "
+              << AbstractResource::getGlobalCount()
+              << "\n";
 }
 
 void Engine::simulateOneDay() {

@@ -95,7 +95,7 @@ void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
         return;
 
     if (provinceIndex < 0 ||
-    static_cast<std::size_t>(provinceIndex) >= provinces.size())
+        static_cast<std::size_t>(provinceIndex) >= provinces.size())
         throw InvalidProvinceIndexException("Index provincie invalid", provinceIndex);
 
     double cost = 0;
@@ -154,7 +154,7 @@ void Country::simulateDay() {
 
     int effRaw = focusTree.tickRaw();
     if (effRaw != -1 && !provinces.empty()) {
-        int i = std::rand() % provinces.size();
+        int i = std::rand() % static_cast<int>(provinces.size());
         switch (static_cast<FocusEffectType>(effRaw)) {
             case FocusEffectType::AddCiv:
                 provinces[i].addCiv(1);      break;
@@ -182,6 +182,13 @@ std::string Country::toString() const {
     ss << "  Equipment: " << equipment << "\n";
     ss << "  Stockpile: " << resources << "\n";
     ss << "  Constructions: " << constructions.size() << "\n";
+
+    int totalSlots = 0;
+    for (const auto& p : provinces) {
+        totalSlots += p.totalConstructionSlotsFromResources();
+    }
+    ss << "  Construction slots (from resources): " << totalSlots << "\n";
+
     ss << "  Provinces:\n";
     for (const auto& p : provinces) {
         ss << "    - " << p << "\n";

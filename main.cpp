@@ -11,6 +11,14 @@ int main() {
     } catch (const AssetLoadException& e) {
         std::cerr << "Eroare la incarcare resurse: " << e.what() << "\n";
         return 1;
+    } catch (const InvalidProvinceIndexException& e) {
+        std::cerr << "Eroare index provincie: " << e.what() << "\n";
+        std::cerr << "Index invalid: " << e.getIndex() << "\n";
+        return 1;
+    } catch (const InvalidConstructionCountException& e) {
+        std::cerr << "Eroare numar constructii: " << e.what() << "\n";
+        std::cerr << "Count invalid: " << e.getCount() << "\n";
+        return 1;
     } catch (const GameException& e) {
         std::cerr << "Eroare de joc: " << e.what() << "\n";
         return 1;
