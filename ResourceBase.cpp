@@ -17,6 +17,7 @@ MaterialResource::MaterialResource(std::string name, int amount)
     : AbstractResource(std::move(name), amount) {}
 
 void MaterialResource::applyDailyEffect(ResourceStockpile& stockpile) const {
+    (void)stockpile;
 }
 
 std::unique_ptr<AbstractResource> MaterialResource::clone() const {
@@ -62,6 +63,7 @@ ConstructionResource::ConstructionResource(std::string name,
 }
 
 void ConstructionResource::applyDailyEffect(ResourceStockpile& stockpile) const {
+    (void)stockpile;
 }
 
 std::unique_ptr<AbstractResource> ConstructionResource::clone() const {
