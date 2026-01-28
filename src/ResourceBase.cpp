@@ -1,4 +1,4 @@
-#include "ResourceBase.h"
+#include "../headers/ResourceBase.h"
 
 int AbstractResource::globalCount = 0;
 
@@ -24,9 +24,20 @@ std::unique_ptr<AbstractResource> MaterialResource::clone() const {
     return std::make_unique<MaterialResource>(*this);
 }
 
+// Implementare functii noi
+std::string MaterialResource::getCategory() const {
+    return "Raw Material";
+}
+
+bool MaterialResource::isStrategic() const {
+    return true; // Materialele sunt strategice
+}
+
 void MaterialResource::printImpl(std::ostream& os) const {
     os << "MaterialResource(" << name << ", amount=" << amount << ")";
 }
+
+
 
 DailyOutputResource::DailyOutputResource(std::string name,
                                          int amount,
@@ -48,11 +59,18 @@ std::unique_ptr<AbstractResource> DailyOutputResource::clone() const {
     return std::make_unique<DailyOutputResource>(*this);
 }
 
+// Implementare functii noi
+std::string DailyOutputResource::getCategory() const {
+    return "Daily Output";
+}
+// isStrategic ramane false (default)
+
 void DailyOutputResource::printImpl(std::ostream& os) const {
     os << "DailyOutputResource(" << name
        << ", amount=" << amount
        << ", fuelPerUnitPerDay=" << fuelPerUnitPerDay << ")";
 }
+
 
 ConstructionResource::ConstructionResource(std::string name,
                                            int amount,
@@ -68,6 +86,15 @@ void ConstructionResource::applyDailyEffect(ResourceStockpile& stockpile) const 
 
 std::unique_ptr<AbstractResource> ConstructionResource::clone() const {
     return std::make_unique<ConstructionResource>(*this);
+}
+
+// Implementare functii noi
+std::string ConstructionResource::getCategory() const {
+    return "Building";
+}
+
+bool ConstructionResource::isStrategic() const {
+    return true;
 }
 
 void ConstructionResource::printImpl(std::ostream& os) const {

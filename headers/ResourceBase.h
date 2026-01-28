@@ -25,6 +25,16 @@ public:
     virtual void applyDailyEffect(ResourceStockpile& stockpile) const = 0;
     virtual std::unique_ptr<AbstractResource> clone() const = 0;
 
+    // --- CERINTA: Mai multe functii virtuale ---
+
+    // 1. Functie virtuala pura (obligatoriu de implementat)
+    // Returneaza categoria resursei (ex: "Building", "Raw Material")
+    virtual std::string getCategory() const = 0;
+
+    // 2. Functie virtuala cu comportament default
+    // Returneaza true daca resursa este critica pentru razboi
+    virtual bool isStrategic() const { return false; }
+
     void print(std::ostream& os) const { printImpl(os); }
 
     static int getGlobalCount() { return globalCount; }
@@ -36,6 +46,10 @@ public:
 
     void applyDailyEffect(ResourceStockpile& stockpile) const override;
     std::unique_ptr<AbstractResource> clone() const override;
+
+    // Implementari virtuale
+    std::string getCategory() const override;
+    bool isStrategic() const override;
 
 protected:
     void printImpl(std::ostream& os) const override;
@@ -49,6 +63,10 @@ public:
 
     void applyDailyEffect(ResourceStockpile& stockpile) const override;
     std::unique_ptr<AbstractResource> clone() const override;
+
+    // Implementari virtuale
+    std::string getCategory() const override;
+    // Foloseste isStrategic() din baza (false)
 
 protected:
     void printImpl(std::ostream& os) const override;
@@ -72,10 +90,16 @@ class ConstructionResource : public AbstractResource {
 public:
     ConstructionResource(std::string name, int amount, ConstructionType type);
 
+    // Aceasta metoda NU este virtuala si nu exista in AbstractResource.
+    // Accesarea ei justifica folosirea dynamic_cast.
     ConstructionType getType() const { return type; }
 
     void applyDailyEffect(ResourceStockpile& stockpile) const override;
     std::unique_ptr<AbstractResource> clone() const override;
+
+    // Implementari virtuale
+    std::string getCategory() const override;
+    bool isStrategic() const override;
 
 protected:
     void printImpl(std::ostream& os) const override;
@@ -86,4 +110,4 @@ inline std::ostream& operator<<(std::ostream& os, const AbstractResource& r) {
     return os;
 }
 
-#endif
+#endif // RESOURCE_BASE_H

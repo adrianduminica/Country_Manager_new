@@ -1,4 +1,4 @@
-#include "Province.h"
+#include "../headers/Province.h"
 #include <sstream>
 #include <algorithm>
 
@@ -139,8 +139,15 @@ void Province::applyResourceEffects(ResourceStockpile& stockpile) const {
 int Province::totalConstructionSlotsFromResources() const {
     int total = 0;
     for (const auto& res : resources) {
+
+
         if (auto* cr = dynamic_cast<const ConstructionResource*>(res.get())) {
-            total += cr->getAmount();
+
+
+
+            if (cr->getType() != ConstructionType::Infra) {
+                total += cr->getAmount();
+            }
         }
     }
     return total;
@@ -167,6 +174,7 @@ std::string Province::toString() const {
     ss << ", RES_OBJS={";
     for (std::size_t i = 0; i < resources.size(); ++i) {
         resources[i]->print(ss);
+
         if (i + 1 < resources.size()) ss << "; ";
     }
     ss << "}";
