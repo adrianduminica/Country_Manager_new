@@ -52,31 +52,31 @@ endif()
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${PROJECT_NAME}
-    main.cpp
+        src/main.cpp
     generated/src/Helper.cpp
     env_fixes.h
-        Engine.cpp
-        Engine.h
-        Country.cpp
-        Country.h
-        FocusTree.cpp
-        FocusTree.h
-        Construction.cpp
-        Construction.h
-        ProductionLine.cpp
-        ProductionLine.h
-        Province.cpp
-        Province.h
-        EquipmentStockpile.cpp
-        EquipmentStockpile.h
-        ResourceStockpile.cpp
-        ResourceStockpile.h
-        Interface.cpp
-        Interface.h
-        ResourceBase.cpp
-        ResourceBase.h
-        GameExceptions.cpp
-        GameExceptions.h
+        src/Engine.cpp
+        headers/Engine.h
+        src/Country.cpp
+        headers/Country.h
+        src/FocusTree.cpp
+        headers/FocusTree.h
+        src/Construction.cpp
+        headers/Construction.h
+        src/ProductionLine.cpp
+        headers/ProductionLine.h
+        src/Province.cpp
+        headers/Province.h
+        src/EquipmentStockpile.cpp
+        headers/EquipmentStockpile.h
+        src/ResourceStockpile.cpp
+        headers/ResourceStockpile.h
+        src/Interface.cpp
+        headers/Interface.h
+        src/ResourceBase.cpp
+        headers/ResourceBase.h
+        src/GameExceptions.cpp
+        headers/GameExceptions.h
 )
 
 include(cmake/CompilerFlags.cmake)
@@ -86,7 +86,9 @@ include(cmake/CompilerFlags.cmake)
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE generated/include)
 # target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
+
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${SFML_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PRIVATE headers)
 target_link_directories(${PROJECT_NAME} PRIVATE ${SFML_BINARY_DIR}/lib)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics sfml-window sfml-system Threads::Threads)
 
