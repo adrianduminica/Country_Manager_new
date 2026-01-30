@@ -4,8 +4,8 @@
 
 ### Controale
 
-!!! La inceput ne alegem tara apasand pe o provincie
-Q-Meniu Focus Tree, dupa se da click pe focus
-W-meniu Constructii dupa se da click pe un tip de constructie si pe o porvincie
-E-Meniu echipament se da click jos pe un tip de echipament dupa ii asignam fabrici
+!!! La inceput ne alegem tara apasand pe o provincie    
+Q-Meniu Focus Tree, dupa se da click pe focus  
+W-meniu Constructii dupa se da click pe un tip de constructie si pe o porvincie  
+E-Meniu echipament se da click jos pe un tip de echipament dupa ii asignam fabrici  
 
