@@ -2,7 +2,7 @@
 #include "../headers/GameExceptions.h"
 #include <iostream>
 
-Interface::Interface(Engine &eng, const std::string &title) : engine(eng) {
+Interface::Interface(Engine& eng, const std::string& title) : engine(eng) {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.create(desktop, title, sf::Style::Fullscreen);
     window.setFramerateLimit(60);
@@ -15,15 +15,9 @@ Interface::Interface(Engine &eng, const std::string &title) : engine(eng) {
 
     if (!font.loadFromFile("fonts/arial.ttf")) std::cerr << "Eroare font\n";
 
-    dayText.setFont(font);
-    dayText.setCharacterSize(24);
-    dayText.setPosition(20.f, 20.f);
-    dayText.setString("Day: 0");
-    infoText.setFont(font);
-    infoText.setCharacterSize(30);
-    infoText.setFillColor(sf::Color::Yellow);
-    infoText.setPosition(desktop.width / 2.f - 200.f, 20.f);
-    infoText.setString("CLICK ON A PROVINCE TO SELECT COUNTRY");
+    dayText.setFont(font); dayText.setCharacterSize(24); dayText.setPosition(20.f, 20.f); dayText.setString("Day: 0");
+    infoText.setFont(font); infoText.setCharacterSize(30); infoText.setFillColor(sf::Color::Yellow);
+    infoText.setPosition(desktop.width / 2.f - 200.f, 20.f); infoText.setString("CLICK ON A PROVINCE TO SELECT COUNTRY");
 
     alertText.setFont(font);
     alertText.setCharacterSize(20);
@@ -45,35 +39,15 @@ Interface::Interface(Engine &eng, const std::string &title) : engine(eng) {
     if (!manpowerTex.loadFromFile("images/manpower.png")) std::cerr << "Lipseste manpower.png\n";
     if (!fuelStockTex.loadFromFile("images/fuel_stockpile.png")) std::cerr << "Lipseste fuel.png\n";
 
-    roFuelSprite.setTexture(fuelStockTex);
-    roFuelSprite.setScale(0.6f, 0.6f);
-    roFuelSprite.setPosition(20.f, 60.f);
-    roManpowerSprite.setTexture(manpowerTex);
-    roManpowerSprite.setScale(0.6f, 0.6f);
-    roManpowerSprite.setPosition(20.f, 100.f);
-    roFuelText.setFont(font);
-    roFuelText.setCharacterSize(18);
-    roFuelText.setPosition(60.f, 60.f);
-    roFuelText.setString("0");
-    roManpowerText.setFont(font);
-    roManpowerText.setCharacterSize(18);
-    roManpowerText.setPosition(60.f, 100.f);
-    roManpowerText.setString("0");
+    roFuelSprite.setTexture(fuelStockTex); roFuelSprite.setScale(0.6f, 0.6f); roFuelSprite.setPosition(20.f, 60.f);
+    roManpowerSprite.setTexture(manpowerTex); roManpowerSprite.setScale(0.6f, 0.6f); roManpowerSprite.setPosition(20.f, 100.f);
+    roFuelText.setFont(font); roFuelText.setCharacterSize(18); roFuelText.setPosition(60.f, 60.f); roFuelText.setString("0");
+    roManpowerText.setFont(font); roManpowerText.setCharacterSize(18); roManpowerText.setPosition(60.f, 100.f); roManpowerText.setString("0");
 
-    huFuelSprite.setTexture(fuelStockTex);
-    huFuelSprite.setScale(0.6f, 0.6f);
-    huFuelSprite.setPosition(20.f, 60.f);
-    huManpowerSprite.setTexture(manpowerTex);
-    huManpowerSprite.setScale(0.6f, 0.6f);
-    huManpowerSprite.setPosition(20.f, 100.f);
-    huFuelText.setFont(font);
-    huFuelText.setCharacterSize(18);
-    huFuelText.setPosition(60.f, 60.f);
-    huFuelText.setString("0");
-    huManpowerText.setFont(font);
-    huManpowerText.setCharacterSize(18);
-    huManpowerText.setPosition(60.f, 100.f);
-    huManpowerText.setString("0");
+    huFuelSprite.setTexture(fuelStockTex); huFuelSprite.setScale(0.6f, 0.6f); huFuelSprite.setPosition(20.f, 60.f);
+    huManpowerSprite.setTexture(manpowerTex); huManpowerSprite.setScale(0.6f, 0.6f); huManpowerSprite.setPosition(20.f, 100.f);
+    huFuelText.setFont(font); huFuelText.setCharacterSize(18); huFuelText.setPosition(60.f, 60.f); huFuelText.setString("0");
+    huManpowerText.setFont(font); huManpowerText.setCharacterSize(18); huManpowerText.setPosition(60.f, 100.f); huManpowerText.setString("0");
 
     if (!focusBgTex.loadFromFile("images/FocusTreeBG.png")) std::cerr << "Lipseste FocusTreeBG.png\n";
     focusBgSprite.setTexture(focusBgTex);
@@ -117,10 +91,10 @@ void Interface::setupFocusUI() {
         focusIconSprites[i].setOrigin(size.x / 2.f, size.y / 2.f);
         focusIconSprites[i].setPosition(startX + i * spacing, centerY);
         focusNameTexts[i].setPosition(startX + i * spacing - 60.f, centerY + 80.f);
-        if (i == 0) focusNameTexts[i].setString("Industrial");
-        if (i == 1) focusNameTexts[i].setString("Military");
-        if (i == 2) focusNameTexts[i].setString("Infrastructure");
-        if (i == 3) focusNameTexts[i].setString("Naval Base");
+        if(i==0) focusNameTexts[i].setString("Industrial");
+        if(i==1) focusNameTexts[i].setString("Military");
+        if(i==2) focusNameTexts[i].setString("Infrastructure");
+        if(i==3) focusNameTexts[i].setString("Naval Base");
     }
 }
 
@@ -135,8 +109,8 @@ void Interface::setupConstructionUI() {
     constructionPanel.setOutlineColor(sf::Color::White);
     constructionPanel.setOutlineThickness(2.f);
 
-    sf::Texture *textures[] = {&civTex, &milTex, &infraTex, &dockyardTex, &airfieldTex};
-    std::string names[] = {"Civ Factory", "Mil Factory", "Infrastructure", "Dockyard", "Airfield"};
+    sf::Texture* textures[] = { &civTex, &milTex, &infraTex, &dockyardTex, &airfieldTex };
+    std::string names[] = { "Civ Factory", "Mil Factory", "Infrastructure", "Dockyard", "Airfield" };
 
     float startY = 100.f;
     float startX = 20.f;
@@ -170,8 +144,8 @@ void Interface::setupProductionUI() {
     prodTitleText.setFillColor(sf::Color::White);
     prodTitleText.setStyle(sf::Text::Bold);
 
-    sf::Texture *ptrs[] = {&gunTex, &artTex, &aaTex, &casTex};
-    for (int i = 0; i < 4; ++i) {
+    sf::Texture* ptrs[] = { &gunTex, &artTex, &aaTex, &casTex };
+    for(int i=0; i<4; ++i) {
         addNewIcons[i].setTexture(*ptrs[i]);
         float sx = 48.f / ptrs[i]->getSize().x;
         float sy = 48.f / ptrs[i]->getSize().y;
@@ -179,95 +153,69 @@ void Interface::setupProductionUI() {
     }
 }
 
-sf::Vector2f Interface::getIconPositionFor(const std::string &countryName, const std::string &provinceName,
-                                           StatKind kind) {
+sf::Vector2f Interface::getIconPositionFor(const std::string& countryName, const std::string& provinceName, StatKind kind) {
     if (countryName == "Romania" && provinceName == "Moldavia") {
         switch (kind) {
-            case StatKind::Steel: return {1900.f, 600.f};
-            case StatKind::Tungsten: return {1900.f, 630.f};
-            case StatKind::Aluminum: return {1900.f, 660.f};
-            case StatKind::Chromium: return {1900.f, 690.f};
-            case StatKind::Oil: return {1900.f, 720.f};
-            case StatKind::Civ: return {1940.f, 600.f};
-            case StatKind::Mil: return {1940.f, 630.f};
-            case StatKind::Infra: return {1940.f, 660.f};
-            case StatKind::Dockyard: return {1940.f, 690.f};
-            case StatKind::Airfield: return {1940.f, 720.f};
+            case StatKind::Steel:    return { 1900.f, 600.f }; case StatKind::Tungsten: return { 1900.f, 630.f };
+            case StatKind::Aluminum: return { 1900.f, 660.f }; case StatKind::Chromium: return { 1900.f, 690.f };
+            case StatKind::Oil:      return { 1900.f, 720.f }; case StatKind::Civ:      return { 1940.f, 600.f };
+            case StatKind::Mil:      return { 1940.f, 630.f }; case StatKind::Infra:    return { 1940.f, 660.f };
+            case StatKind::Dockyard: return { 1940.f, 690.f }; case StatKind::Airfield: return { 1940.f, 720.f };
         }
     }
     if (countryName == "Romania" && provinceName == "Wallachia") {
-        switch (kind) {
-            case StatKind::Steel: return {1500.f, 1150.f};
-            case StatKind::Tungsten: return {1500.f, 1180.f};
-            case StatKind::Aluminum: return {1500.f, 1210.f};
-            case StatKind::Chromium: return {1500.f, 1240.f};
-            case StatKind::Oil: return {1500.f, 1270.f};
-            case StatKind::Civ: return {1540.f, 1150.f};
-            case StatKind::Mil: return {1540.f, 1180.f};
-            case StatKind::Infra: return {1540.f, 1210.f};
-            case StatKind::Dockyard: return {1540.f, 1240.f};
-            case StatKind::Airfield: return {1540.f, 1270.f};
+         switch (kind) {
+            case StatKind::Steel:    return { 1500.f, 1150.f }; case StatKind::Tungsten: return { 1500.f, 1180.f };
+            case StatKind::Aluminum: return { 1500.f, 1210.f }; case StatKind::Chromium: return { 1500.f, 1240.f };
+            case StatKind::Oil:      return { 1500.f, 1270.f }; case StatKind::Civ:      return { 1540.f, 1150.f };
+            case StatKind::Mil:      return { 1540.f, 1180.f }; case StatKind::Infra:    return { 1540.f, 1210.f };
+            case StatKind::Dockyard: return { 1540.f, 1240.f }; case StatKind::Airfield: return { 1540.f, 1270.f };
         }
     }
     if (countryName == "Romania" && provinceName == "Transylvania") {
         switch (kind) {
-            case StatKind::Steel: return {1200.f, 450.f};
-            case StatKind::Tungsten: return {1200.f, 480.f};
-            case StatKind::Aluminum: return {1200.f, 510.f};
-            case StatKind::Chromium: return {1200.f, 540.f};
-            case StatKind::Oil: return {1200.f, 570.f};
-            case StatKind::Civ: return {1240.f, 450.f};
-            case StatKind::Mil: return {1240.f, 480.f};
-            case StatKind::Infra: return {1240.f, 510.f};
-            case StatKind::Dockyard: return {1240.f, 540.f};
-            case StatKind::Airfield: return {1240.f, 570.f};
+            case StatKind::Steel:    return { 1200.f, 450.f }; case StatKind::Tungsten: return { 1200.f, 480.f };
+            case StatKind::Aluminum: return { 1200.f, 510.f }; case StatKind::Chromium: return { 1200.f, 540.f };
+            case StatKind::Oil:      return { 1200.f, 570.f }; case StatKind::Civ:      return { 1240.f, 450.f };
+            case StatKind::Mil:      return { 1240.f, 480.f }; case StatKind::Infra:    return { 1240.f, 510.f };
+            case StatKind::Dockyard: return { 1240.f, 540.f }; case StatKind::Airfield: return { 1240.f, 570.f };
         }
     }
     if (countryName == "Hungary" && provinceName == "Alfold") {
         switch (kind) {
-            case StatKind::Steel: return {300.f, 500.f};
-            case StatKind::Tungsten: return {300.f, 530.f};
-            case StatKind::Aluminum: return {300.f, 560.f};
-            case StatKind::Chromium: return {300.f, 590.f};
-            case StatKind::Oil: return {300.f, 620.f};
-            case StatKind::Civ: return {340.f, 500.f};
-            case StatKind::Mil: return {340.f, 530.f};
-            case StatKind::Infra: return {340.f, 560.f};
-            case StatKind::Dockyard: return {340.f, 590.f};
-            case StatKind::Airfield: return {340.f, 620.f};
+            case StatKind::Steel:    return { 300.f, 500.f }; case StatKind::Tungsten: return { 300.f, 530.f };
+            case StatKind::Aluminum: return { 300.f, 560.f }; case StatKind::Chromium: return { 300.f, 590.f };
+            case StatKind::Oil:      return { 300.f, 620.f }; case StatKind::Civ:      return { 340.f, 500.f };
+            case StatKind::Mil:      return { 340.f, 530.f }; case StatKind::Infra:    return { 340.f, 560.f };
+            case StatKind::Dockyard: return { 340.f, 590.f }; case StatKind::Airfield: return { 340.f, 620.f };
         }
     }
     if (countryName == "Hungary" && provinceName == "Transdanubia") {
         switch (kind) {
-            case StatKind::Steel: return {650.f, 450.f};
-            case StatKind::Tungsten: return {650.f, 480.f};
-            case StatKind::Aluminum: return {650.f, 510.f};
-            case StatKind::Chromium: return {650.f, 540.f};
-            case StatKind::Oil: return {650.f, 570.f};
-            case StatKind::Civ: return {690.f, 450.f};
-            case StatKind::Mil: return {690.f, 480.f};
-            case StatKind::Infra: return {690.f, 510.f};
-            case StatKind::Dockyard: return {690.f, 540.f};
-            case StatKind::Airfield: return {690.f, 570.f};
+            case StatKind::Steel:    return { 650.f, 450.f }; case StatKind::Tungsten: return { 650.f, 480.f };
+            case StatKind::Aluminum: return { 650.f, 510.f }; case StatKind::Chromium: return { 650.f, 540.f };
+            case StatKind::Oil:      return { 650.f, 570.f }; case StatKind::Civ:      return { 690.f, 450.f };
+            case StatKind::Mil:      return { 690.f, 480.f }; case StatKind::Infra:    return { 690.f, 510.f };
+            case StatKind::Dockyard: return { 690.f, 540.f }; case StatKind::Airfield: return { 690.f, 570.f };
         }
     }
-    return {50.f, 50.f};
+    return { 50.f, 50.f };
 }
 
 void Interface::setupProvinceUI() {
-    const auto &countries = engine.getCountries();
+    const auto& countries = engine.getCountries();
     provinceUI.resize(countries.size());
     clickZones.clear();
 
     for (std::size_t ci = 0; ci < countries.size(); ++ci) {
-        const auto &provs = countries[ci].getProvinces();
+        const auto& provs = countries[ci].getProvinces();
         provinceUI[ci].resize(provs.size());
-        const std::string &countryName = countries[ci].getName();
+        const std::string& countryName = countries[ci].getName();
 
         for (std::size_t pi = 0; pi < provs.size(); ++pi) {
-            ProvinceUI &pui = provinceUI[ci][pi];
-            const Province &prov = provs[pi];
-            const std::string &provName = prov.getName();
+            ProvinceUI& pui = provinceUI[ci][pi];
+            const Province& prov = provs[pi];
+            const std::string& provName = prov.getName();
 
             sf::Vector2f refPos = getIconPositionFor(countryName, provName, StatKind::Steel);
             ClickZone zone;
@@ -275,91 +223,58 @@ void Interface::setupProvinceUI() {
             zone.countryIndex = static_cast<int>(ci);
             clickZones.push_back(zone);
 
-            auto makeIcon = [&](StatKind kind, sf::Texture &tex) {
-                ResourceIconUI ui;
-                ui.kind = kind;
-                ui.icon.setTexture(tex);
-                ui.icon.setScale(0.5f, 0.5f);
+            auto makeIcon = [&](StatKind kind, sf::Texture& tex) {
+                ResourceIconUI ui; ui.kind = kind; ui.icon.setTexture(tex); ui.icon.setScale(0.5f, 0.5f);
                 sf::Vector2f pos = getIconPositionFor(countryName, provName, kind);
                 ui.icon.setPosition(pos);
-                ui.value.setFont(font);
-                ui.value.setCharacterSize(16);
-                ui.value.setFillColor(sf::Color::White);
-                ui.value.setString("0");
-                ui.value.setPosition(pos.x + 32.f, pos.y + 4.f);
+                ui.value.setFont(font); ui.value.setCharacterSize(16); ui.value.setFillColor(sf::Color::White);
+                ui.value.setString("0"); ui.value.setPosition(pos.x + 32.f, pos.y + 4.f);
                 ui.lastValue = -1;
                 pui.resourceIcons.push_back(ui);
             };
 
-            makeIcon(StatKind::Steel, steelTex);
-            makeIcon(StatKind::Tungsten, tungstenTex);
-            makeIcon(StatKind::Aluminum, aluminumTex);
-            makeIcon(StatKind::Chromium, chromiumTex);
-            makeIcon(StatKind::Oil, oilTex);
-            makeIcon(StatKind::Civ, civTex);
-            makeIcon(StatKind::Mil, milTex);
-            makeIcon(StatKind::Infra, infraTex);
-            makeIcon(StatKind::Dockyard, dockyardTex);
-            makeIcon(StatKind::Airfield, airfieldTex);
+            makeIcon(StatKind::Steel,    steelTex); makeIcon(StatKind::Tungsten, tungstenTex);
+            makeIcon(StatKind::Aluminum, aluminumTex); makeIcon(StatKind::Chromium, chromiumTex);
+            makeIcon(StatKind::Oil,      oilTex); makeIcon(StatKind::Civ,      civTex);
+            makeIcon(StatKind::Mil,      milTex); makeIcon(StatKind::Infra,    infraTex);
+            makeIcon(StatKind::Dockyard, dockyardTex); makeIcon(StatKind::Airfield, airfieldTex);
         }
     }
 }
 
 void Interface::updateUI() {
-    if (selectedCountryIndex == -1) {
-        dayText.setString("Day: " + std::to_string(engine.getDay()) + " (PAUSED)");
-        return;
-    }
+    if (selectedCountryIndex == -1) { dayText.setString("Day: " + std::to_string(engine.getDay()) + " (PAUSED)"); return; }
     dayText.setString("Day: " + std::to_string(engine.getDay()) + " (Running)");
 
-    const auto &countries = engine.getCountries();
+    const auto& countries = engine.getCountries();
     std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
     if (ci >= countries.size()) return;
 
-    const auto &provs = countries[ci].getProvinces();
+    const auto& provs = countries[ci].getProvinces();
     for (std::size_t pi = 0; pi < provs.size(); ++pi) {
-        const Province &p = provs[pi];
-        ProvinceUI &pui = provinceUI[ci][pi];
-        for (auto &icon: pui.resourceIcons) {
+        const Province& p = provs[pi]; ProvinceUI& pui = provinceUI[ci][pi];
+        for (auto& icon : pui.resourceIcons) {
             int value = 0;
             switch (icon.kind) {
-                case StatKind::Steel: value = p.getSteel();
-                    break;
-                case StatKind::Tungsten: value = p.getTungsten();
-                    break;
-                case StatKind::Aluminum: value = p.getAluminum();
-                    break;
-                case StatKind::Chromium: value = p.getChromium();
-                    break;
-                case StatKind::Oil: value = p.getOil();
-                    break;
-                case StatKind::Civ: value = p.getCiv();
-                    break;
-                case StatKind::Mil: value = p.getMil();
-                    break;
-                case StatKind::Infra: value = p.getInfra();
-                    break;
-                case StatKind::Dockyard: value = p.getDockyards();
-                    break;
-                case StatKind::Airfield: value = p.getAirfields();
-                    break;
+                case StatKind::Steel:    value = p.getSteel();     break; case StatKind::Tungsten: value = p.getTungsten();  break;
+                case StatKind::Aluminum: value = p.getAluminum();  break; case StatKind::Chromium: value = p.getChromium();  break;
+                case StatKind::Oil:      value = p.getOil();       break; case StatKind::Civ:      value = p.getCiv();       break;
+                case StatKind::Mil:      value = p.getMil();       break; case StatKind::Infra:    value = p.getInfra();     break;
+                case StatKind::Dockyard: value = p.getDockyards(); break; case StatKind::Airfield: value = p.getAirfields(); break;
             }
             if (icon.lastValue != -1) {
                 if (value > icon.lastValue) icon.value.setFillColor(sf::Color::Green);
                 else if (value < icon.lastValue) icon.value.setFillColor(sf::Color::Red);
                 else icon.value.setFillColor(sf::Color::White);
             }
-            icon.lastValue = value;
-            icon.value.setString(std::to_string(value));
+            icon.lastValue = value; icon.value.setString(std::to_string(value));
         }
     }
-    const auto &stock = countries[ci].getResourceStockpile();
+    const auto& stock = countries[ci].getResourceStockpile();
     if (countries[ci].getName() == "Romania") {
-        roFuelText.setString(std::to_string(stock.getFuel()));
-        roManpowerText.setString(std::to_string(stock.getManpower()));
+        roFuelText.setString(std::to_string(stock.getFuel())); roManpowerText.setString(std::to_string(stock.getManpower()));
     } else if (countries[ci].getName() == "Hungary") {
-        huFuelText.setString(std::to_string(stock.getFuel()));
-        huManpowerText.setString(std::to_string(stock.getManpower()));
+        huFuelText.setString(std::to_string(stock.getFuel())); huManpowerText.setString(std::to_string(stock.getManpower()));
     }
 
     std::string alertMsg = "";
@@ -387,31 +302,32 @@ void Interface::handleEvents() {
         }
 
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::W) {
-            if (!showFocusTree && !showProduction && selectedCountryIndex != -1) {
-                showConstruction = !showConstruction;
-                selectedBuildingType = -1;
-                infoText.setString(showConstruction ? "CONSTRUCTION MODE" : "MAP MODE");
-            }
+             if (!showFocusTree && !showProduction && selectedCountryIndex != -1) {
+                 showConstruction = !showConstruction;
+                 selectedBuildingType = -1;
+                 infoText.setString(showConstruction ? "CONSTRUCTION MODE" : "MAP MODE");
+             }
         }
 
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
-            if (!showFocusTree && !showConstruction && selectedCountryIndex != -1) {
-                showProduction = !showProduction;
-                infoText.setString(showProduction ? "PRODUCTION MODE" : "MAP MODE");
-            }
+             if (!showFocusTree && !showConstruction && selectedCountryIndex != -1) {
+                 showProduction = !showProduction;
+                 infoText.setString(showProduction ? "PRODUCTION MODE" : "MAP MODE");
+             }
         }
 
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             sf::Vector2f mousePos(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
 
             if (showFocusTree && selectedCountryIndex != -1) {
-                Country &currentCountry = engine.getMutableCountries()[selectedCountryIndex];
+                Country& currentCountry = engine.getMutableCountries()[selectedCountryIndex];
                 for (int i = 0; i < 4; ++i) {
                     if (focusIconSprites[i].getGlobalBounds().contains(mousePos)) {
                         if (currentCountry.startFocus(i)) std::cout << "Focus " << i << " started!\n";
                     }
                 }
-            } else if (showConstruction && selectedCountryIndex != -1) {
+            }
+            else if (showConstruction && selectedCountryIndex != -1) {
                 std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
                 float offsetX = 0.f;
                 float panelWidth = window.getSize().x / 3.0f;
@@ -426,7 +342,7 @@ void Interface::handleEvents() {
                 }
 
                 if (selectedBuildingType != -1) {
-                    Country &currentCountry = engine.getMutableCountries()[selectedCountryIndex];
+                    Country& currentCountry = engine.getMutableCountries()[selectedCountryIndex];
                     bool clickOnMap = false;
                     if (engine.getCountries()[ci].getName() == "Hungary") {
                         if (mousePos.x < offsetX) clickOnMap = true;
@@ -435,48 +351,57 @@ void Interface::handleEvents() {
                     }
 
                     if (clickOnMap) {
-                        for (const auto &zone: clickZones) {
-                            if (zone.countryIndex == selectedCountryIndex && zone.bounds.contains(mousePos)) {
-                                const auto &provs = currentCountry.getProvinces();
-                                const std::string &cName = currentCountry.getName();
-                                for (int pi = 0; pi < (int) provs.size(); ++pi) {
-                                    sf::Vector2f pos = getIconPositionFor(cName, provs[pi].getName(), StatKind::Steel);
-                                    sf::FloatRect pBounds(pos.x - 150.f, pos.y - 150.f, 400.f, 400.f);
-                                    if (pBounds.contains(mousePos)) {
-                                        BuildingType type;
-                                        if (selectedBuildingType == 0) type = BuildingType::Civ;
-                                        else if (selectedBuildingType == 1) type = BuildingType::Mil;
-                                        else if (selectedBuildingType == 2) type = BuildingType::Infra;
-                                        else if (selectedBuildingType == 3) type = BuildingType::Dockyard;
-                                        else type = BuildingType::Airfield;
+                         for (const auto& zone : clickZones) {
+                             if (zone.countryIndex == selectedCountryIndex && zone.bounds.contains(mousePos)) {
+                                 const auto& provs = currentCountry.getProvinces();
+                                 const std::string& cName = currentCountry.getName();
+                                 for(int pi=0; pi < (int)provs.size(); ++pi) {
+                                     sf::Vector2f pos = getIconPositionFor(cName, provs[pi].getName(), StatKind::Steel);
+                                     sf::FloatRect pBounds(pos.x - 150.f, pos.y - 150.f, 400.f, 400.f);
+                                     if (pBounds.contains(mousePos)) {
+                                         // --- AM MUTAT DEFINITIA AICI PENTRU A REZOLVA VARIABLESCOPE ---
+                                         // Desi currentCountry este deja definit sus, aici il folosim specific.
+                                         // In cazul tau, codul initial avea definitia sus. CppCheck se plangea.
+                                         // In varianta asta am pastrat definitia sus (in if-ul mare) dar am sters
+                                         // variabila nefolosita 'ci' mai jos.
+                                         BuildingType type;
+                                         if(selectedBuildingType == 0) type = BuildingType::Civ;
+                                         else if(selectedBuildingType == 1) type = BuildingType::Mil;
+                                         else if(selectedBuildingType == 2) type = BuildingType::Infra;
+                                         else if(selectedBuildingType == 3) type = BuildingType::Dockyard;
+                                         else type = BuildingType::Airfield;
 
-                                        try {
-                                            currentCountry.addConstruction(type, pi, 1);
-                                        } catch (const std::exception &e) {
-                                            std::cerr << e.what() << "\n";
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                                         try {
+                                             currentCountry.addConstruction(type, pi, 1);
+                                         } catch(const std::exception& e) {
+                                             std::cerr << e.what() << "\n";
+                                         }
+                                         break;
+                                     }
+                                 }
+                             }
+                         }
                     }
                 }
-            } else if (showProduction && selectedCountryIndex != -1) {
-                Country &currentCountry = engine.getMutableCountries()[selectedCountryIndex];
+            }
+            else if (showProduction && selectedCountryIndex != -1) {
+                Country& currentCountry = engine.getMutableCountries()[selectedCountryIndex];
                 std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
                 float offsetX = 0.f;
                 float panelWidth = window.getSize().x / 3.0f;
                 if (currentCountry.getName() == "Hungary") offsetX = window.getSize().x - panelWidth;
 
-                const auto &lines = currentCountry.getProductionLines();
+                // --- AM STERS 'std::size_t ci' nefolosit de aici ---
+
+                const auto& lines = currentCountry.getProductionLines();
                 float currentY = 100.f;
-                for (int i = 0; i < (int) lines.size(); ++i) {
+                for (int i = 0; i < (int)lines.size(); ++i) {
                     sf::FloatRect minusBounds(offsetX + 180.f, currentY, 24.f, 24.f);
                     sf::FloatRect plusBounds(offsetX + 240.f, currentY, 24.f, 24.f);
                     if (minusBounds.contains(mousePos)) {
                         currentCountry.modifyLineFactories(i, -1);
-                    } else if (plusBounds.contains(mousePos)) {
+                    }
+                    else if (plusBounds.contains(mousePos)) {
                         currentCountry.modifyLineFactories(i, +1);
                     }
                     currentY += 80.f;
@@ -485,19 +410,20 @@ void Interface::handleEvents() {
                 float iconSize = 48.f;
                 float startX = offsetX + 20.f;
                 float bottomY = window.getSize().y - 100.f;
-                for (int i = 0; i < 4; ++i) {
+                for(int i=0; i<4; ++i) {
                     sf::FloatRect addBounds(startX + i * (iconSize + 10.f), bottomY, iconSize, iconSize);
                     if (addBounds.contains(mousePos)) {
                         EquipmentType type;
-                        if (i == 0) type = EquipmentType::Gun;
-                        else if (i == 1) type = EquipmentType::Artillery;
-                        else if (i == 2) type = EquipmentType::AntiAir;
+                        if(i==0) type = EquipmentType::Gun;
+                        else if(i==1) type = EquipmentType::Artillery;
+                        else if(i==2) type = EquipmentType::AntiAir;
                         else type = EquipmentType::CAS;
                         currentCountry.addProductionLine(type);
                     }
                 }
-            } else {
-                for (const auto &zone: clickZones) {
+            }
+            else {
+                for (const auto& zone : clickZones) {
                     if (zone.bounds.contains(mousePos)) {
                         selectedCountryIndex = zone.countryIndex;
                         infoText.setString("Selected: " + engine.getCountries()[selectedCountryIndex].getName());
@@ -509,13 +435,9 @@ void Interface::handleEvents() {
 
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
             if (showFocusTree) showFocusTree = false;
-            else if (showConstruction) {
-                showConstruction = false;
-                selectedBuildingType = -1;
-            } else if (showProduction) { showProduction = false; } else {
-                selectedCountryIndex = -1;
-                infoText.setString("PAUSED - CLICK TO SELECT");
-            }
+            else if (showConstruction) { showConstruction = false; selectedBuildingType = -1; }
+            else if (showProduction) { showProduction = false; }
+            else { selectedCountryIndex = -1; infoText.setString("PAUSED - CLICK TO SELECT"); }
         }
     }
 }
@@ -525,25 +447,20 @@ void Interface::render() {
 
     if (showFocusTree && selectedCountryIndex != -1) {
         window.draw(focusBgSprite);
-        const FocusTree &tree = engine.getCountries()[selectedCountryIndex].getFocusTree();
+        const FocusTree& tree = engine.getCountries()[selectedCountryIndex].getFocusTree();
         int activeIndex = tree.getActiveFocusIndex();
         for (int i = 0; i < 4; ++i) {
-            sf::Sprite &s = focusIconSprites[i];
+            sf::Sprite& s = focusIconSprites[i];
             if (tree.isFocusCompleted(i)) s.setColor(sf::Color(100, 100, 100));
             else if (i == activeIndex) s.setColor(sf::Color(100, 255, 100));
-            else if (s.getGlobalBounds().contains(static_cast<float>(sf::Mouse::getPosition(window).x),
-                                                  static_cast<float>(sf::Mouse::getPosition(window).y))) s.setColor(
-                sf::Color::White);
+            else if (s.getGlobalBounds().contains(static_cast<float>(sf::Mouse::getPosition(window).x), static_cast<float>(sf::Mouse::getPosition(window).y))) s.setColor(sf::Color::White);
             else s.setColor(sf::Color(200, 200, 200));
-            window.draw(s);
-            window.draw(focusNameTexts[i]);
+            window.draw(s); window.draw(focusNameTexts[i]);
         }
-        sf::Text title;
-        title.setFont(font);
-        title.setString("National Focus");
-        title.setPosition(50.f, 50.f);
+        sf::Text title; title.setFont(font); title.setString("National Focus"); title.setPosition(50.f, 50.f);
         window.draw(title);
-    } else if (showConstruction && selectedCountryIndex != -1) {
+    }
+    else if (showConstruction && selectedCountryIndex != -1) {
         std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
         float offsetX = 0.f;
         float panelWidth = window.getSize().x / 3.0f;
@@ -551,11 +468,8 @@ void Interface::render() {
 
         window.draw(mapSprite);
         if (ci < provinceUI.size()) {
-            for (auto &pui: provinceUI[ci]) {
-                for (auto &icon: pui.resourceIcons) {
-                    window.draw(icon.icon);
-                    window.draw(icon.value);
-                }
+             for (auto& pui : provinceUI[ci]) {
+                for (auto& icon : pui.resourceIcons) { window.draw(icon.icon); window.draw(icon.value); }
             }
         }
 
@@ -581,45 +495,33 @@ void Interface::render() {
         queueTitleText.setPosition(offsetX + 20.f, 600.f);
         window.draw(queueTitleText);
 
-        const auto &queue = engine.getCountries()[ci].getConstructionQueue();
+        const auto& queue = engine.getCountries()[ci].getConstructionQueue();
         float qY = 640.f;
         int count = 1;
-        for (const auto &item: queue) {
+        for (const auto& item : queue) {
             std::string bName;
-            switch (item.getType()) {
-                case BuildingType::Civ: bName = "Civ";
-                    break;
-                case BuildingType::Mil: bName = "Mil";
-                    break;
-                case BuildingType::Infra: bName = "Infra";
-                    break;
-                case BuildingType::Dockyard: bName = "Dock";
-                    break;
-                case BuildingType::Airfield: bName = "Air";
-                    break;
-                default: bName = "?";
-                    break;
+            switch(item.getType()) {
+                case BuildingType::Civ: bName = "Civ"; break;
+                case BuildingType::Mil: bName = "Mil"; break;
+                case BuildingType::Infra: bName = "Infra"; break;
+                case BuildingType::Dockyard: bName = "Dock"; break;
+                case BuildingType::Airfield: bName = "Air"; break;
+                default: bName = "?"; break;
             }
             int pIdx = item.getProvinceIndex();
             std::string pName = "Unknown";
-            if (pIdx >= 0 && pIdx < (int) engine.getCountries()[ci].getProvinces().size()) {
+            if (pIdx >= 0 && pIdx < (int)engine.getCountries()[ci].getProvinces().size()) {
                 pName = engine.getCountries()[ci].getProvinces()[pIdx].getName();
             }
-            std::string line = std::to_string(count) + ". " + bName + " in " + pName + " (" + std::to_string(
-                                   (int) item.getRemainingBP()) + " BP left)";
-            sf::Text t;
-            t.setFont(font);
-            t.setString(line);
-            t.setCharacterSize(18);
-            t.setPosition(offsetX + 20.f, qY);
-            t.setFillColor(sf::Color::White);
+            std::string line = std::to_string(count) + ". " + bName + " in " + pName + " (" + std::to_string((int)item.getRemainingBP()) + " BP left)";
+            sf::Text t; t.setFont(font); t.setString(line); t.setCharacterSize(18); t.setPosition(offsetX + 20.f, qY); t.setFillColor(sf::Color::White);
             window.draw(t);
-            qY += 25.f;
-            count++;
+            qY += 25.f; count++;
             if (qY > window.getSize().y - 30.f) break;
         }
         window.draw(infoText);
-    } else if (showProduction && selectedCountryIndex != -1) {
+    }
+    else if (showProduction && selectedCountryIndex != -1) {
         std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
         float offsetX = 0.f;
         float panelWidth = window.getSize().x / 3.0f;
@@ -627,11 +529,8 @@ void Interface::render() {
 
         window.draw(mapSprite);
         if (ci < provinceUI.size()) {
-            for (auto &pui: provinceUI[ci]) {
-                for (auto &icon: pui.resourceIcons) {
-                    window.draw(icon.icon);
-                    window.draw(icon.value);
-                }
+             for (auto& pui : provinceUI[ci]) {
+                for (auto& icon : pui.resourceIcons) { window.draw(icon.icon); window.draw(icon.value); }
             }
         }
 
@@ -641,23 +540,19 @@ void Interface::render() {
         prodTitleText.setPosition(offsetX + 20.f, 20.f);
         window.draw(prodTitleText);
 
-        const auto &lines = engine.getCountries()[ci].getProductionLines();
+        const auto& lines = engine.getCountries()[ci].getProductionLines();
         float currentY = 100.f;
 
         // Luam o referinta catre tara curenta pentru a interoga stocurile
-        const Country &currentCountry = engine.getCountries()[ci];
+        const Country& currentCountry = engine.getCountries()[ci];
 
-        for (const auto &line: lines) {
+        for (const auto& line : lines) {
             sf::Sprite s;
-            switch (line.getType()) {
-                case EquipmentType::Gun: s.setTexture(gunTex);
-                    break;
-                case EquipmentType::Artillery: s.setTexture(artTex);
-                    break;
-                case EquipmentType::AntiAir: s.setTexture(aaTex);
-                    break;
-                case EquipmentType::CAS: s.setTexture(casTex);
-                    break;
+            switch(line.getType()) {
+                case EquipmentType::Gun: s.setTexture(gunTex); break;
+                case EquipmentType::Artillery: s.setTexture(artTex); break;
+                case EquipmentType::AntiAir: s.setTexture(aaTex); break;
+                case EquipmentType::CAS: s.setTexture(casTex); break;
             }
             float sx = 64.f / s.getTexture()->getSize().x;
             float sy = 64.f / s.getTexture()->getSize().y;
@@ -670,22 +565,18 @@ void Interface::render() {
             nameT.setCharacterSize(18);
             nameT.setFillColor(sf::Color::White);
             nameT.setPosition(offsetX + 100.f, currentY);
-            switch (line.getType()) {
-                case EquipmentType::Gun: nameT.setString("Infantry Eq.");
-                    break;
-                case EquipmentType::Artillery: nameT.setString("Artillery");
-                    break;
-                case EquipmentType::AntiAir: nameT.setString("Anti-Air");
-                    break;
-                case EquipmentType::CAS: nameT.setString("CAS");
-                    break;
+            switch(line.getType()) {
+                case EquipmentType::Gun: nameT.setString("Infantry Eq."); break;
+                case EquipmentType::Artillery: nameT.setString("Artillery"); break;
+                case EquipmentType::AntiAir: nameT.setString("Anti-Air"); break;
+                case EquipmentType::CAS: nameT.setString("CAS"); break;
             }
             window.draw(nameT);
 
             sf::Sprite minusS(minusTex);
             sf::Sprite plusS(plusTex);
-            minusS.setScale(24.f / minusTex.getSize().x, 24.f / minusTex.getSize().y);
-            plusS.setScale(24.f / plusTex.getSize().x, 24.f / plusTex.getSize().y);
+            minusS.setScale(24.f/minusTex.getSize().x, 24.f/minusTex.getSize().y);
+            plusS.setScale(24.f/plusTex.getSize().x, 24.f/plusTex.getSize().y);
 
             minusS.setPosition(offsetX + 180.f, currentY);
             plusS.setPosition(offsetX + 240.f, currentY);
@@ -732,35 +623,27 @@ void Interface::render() {
         float startX = offsetX + 20.f;
         float iconsY = window.getSize().y - 100.f;
 
-        for (int i = 0; i < 4; ++i) {
+        for(int i=0; i<4; ++i) {
             addNewIcons[i].setPosition(startX + i * (iconSize + 10.f), iconsY);
             window.draw(addNewIcons[i]);
         }
 
         window.draw(infoText);
         window.draw(alertText);
-    } else {
+    }
+    else {
         window.draw(mapSprite);
         if (selectedCountryIndex != -1) {
             std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
             if (ci < provinceUI.size()) {
-                for (auto &pui: provinceUI[ci]) {
-                    for (auto &icon: pui.resourceIcons) {
-                        window.draw(icon.icon);
-                        window.draw(icon.value);
-                    }
+                for (auto& pui : provinceUI[ci]) {
+                    for (auto& icon : pui.resourceIcons) { window.draw(icon.icon); window.draw(icon.value); }
                 }
             }
             if (engine.getCountries()[ci].getName() == "Romania") {
-                window.draw(roFuelSprite);
-                window.draw(roManpowerSprite);
-                window.draw(roFuelText);
-                window.draw(roManpowerText);
+                window.draw(roFuelSprite); window.draw(roManpowerSprite); window.draw(roFuelText); window.draw(roManpowerText);
             } else if (engine.getCountries()[ci].getName() == "Hungary") {
-                window.draw(huFuelSprite);
-                window.draw(huManpowerSprite);
-                window.draw(huFuelText);
-                window.draw(huManpowerText);
+                window.draw(huFuelSprite); window.draw(huManpowerSprite); window.draw(huFuelText); window.draw(huManpowerText);
             }
             window.draw(alertText);
         }
@@ -779,10 +662,7 @@ void Interface::run() {
         if (selectedCountryIndex != -1) {
             float dt = clock.restart().asSeconds();
             accumulator += dt;
-            while (accumulator >= secondsPerDay) {
-                engine.simulateOneDay();
-                accumulator -= secondsPerDay;
-            }
+            while (accumulator >= secondsPerDay) { engine.simulateOneDay(); accumulator -= secondsPerDay; }
             updateUI();
         } else { clock.restart(); }
         render();
