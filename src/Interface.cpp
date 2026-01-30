@@ -1,7 +1,32 @@
+/**
+ * @file Interface.cpp
+ * @brief Implementarea interfetei grafice (SFML) pentru joc: harta, selectie tara, focus tree,
+ *        constructii si productie.
+ *
+ * Responsabilitati principale:
+ *  - initializarea ferestrei fullscreen si a resurselor (texturi/fonturi)
+ *  - construirea elementelor UI (focus, provincii, constructii, productie)
+ *  - actualizarea UI in functie de starea Engine/Country
+ *  - tratarea input-ului (mouse/keyboard) si randarea cadrului curent
+ */
+
 #include "../headers/Interface.h"
 #include "../headers/GameExceptions.h"
 #include <iostream>
 
+/**
+ * @brief Construieste interfata grafica si incarca toate resursele (texturi, fonturi).
+ *
+ * Creeaza o fereastra fullscreen la rezolutia desktop-ului si seteaza un framerate limit de 60.
+ * Incarca harta, iconitele (resurse/cladiri/echipamente), fundalul focus tree si fontul.
+ * Initializeaza textele si sprite-urile folosite in UI, apoi apeleaza functiile de setup
+ * pentru diversele panouri.
+ *
+ * @param eng Referinta la Engine-ul jocului (folosit pentru citire si modificari).
+ * @param title Titlul ferestrei.
+ *
+ * @throws AssetLoadException daca harta (images/harta.png) nu se poate incarca.
+ */
 Interface::Interface(Engine& eng, const std::string& title) : engine(eng) {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.create(desktop, title, sf::Style::Fullscreen);
@@ -79,6 +104,12 @@ Interface::Interface(Engine& eng, const std::string& title) : engine(eng) {
     setupProductionUI();
 }
 
+/**
+ * @brief Configureaza UI-ul pentru ecranul de Focus Tree.
+ *
+ * Plaseaza iconitele celor 4 focus-uri in jurul centrului ecranului cu un spacing fix
+ * si seteaza etichetele de text pentru fiecare focus.
+ */
 void Interface::setupFocusUI() {
     sf::Vector2u windowSize = window.getSize();
     float centerX = windowSize.x / 2.0f;
@@ -98,6 +129,12 @@ void Interface::setupFocusUI() {
     }
 }
 
+/**
+ * @brief Configureaza panoul de constructii (UI) si iconitele de selectie.
+ *
+ * Creeaza un panel (RectangleShape) cu fundal (FocusTreeBG), contur si lista de iconite pentru
+ * tipurile de cladiri construibile + titlul pentru coada de constructii.
+ */
 void Interface::setupConstructionUI() {
     sf::Vector2u winSize = window.getSize();
     float panelWidth = winSize.x / 3.0f;
@@ -137,6 +174,12 @@ void Interface::setupConstructionUI() {
     queueTitleText.setStyle(sf::Text::Bold);
 }
 
+/**
+ * @brief Configureaza elementele de UI pentru ecranul de productie.
+ *
+ * Initializeaza titlul panoului de productie si iconitele pentru adaugarea unei noi linii
+ * (Gun/Artillery/AntiAir/CAS).
+ */
 void Interface::setupProductionUI() {
     prodTitleText.setFont(font);
     prodTitleText.setString("Production Lines");
@@ -153,6 +196,17 @@ void Interface::setupProductionUI() {
     }
 }
 
+/**
+ * @brief Returneaza pozitia (pe ecran) pentru un icon statistic intr-o anumita provincie.
+ *
+ * Functie de mapare "hardcoded" pentru a plasa iconitele resurselor/cladirilor pe harta,
+ * pe baza numelui tarii si al provinciei.
+ *
+ * @param countryName Numele tarii (ex: "Romania", "Hungary").
+ * @param provinceName Numele provinciei (ex: "Moldavia", "Wallachia").
+ * @param kind Tipul statisticii (resursa/cladire) ce va fi desenata.
+ * @return Coordonatele (x, y) unde trebuie plasat icon-ul.
+ */
 sf::Vector2f Interface::getIconPositionFor(const std::string& countryName, const std::string& provinceName, StatKind kind) {
     if (countryName == "Romania" && provinceName == "Moldavia") {
         switch (kind) {
@@ -202,6 +256,15 @@ sf::Vector2f Interface::getIconPositionFor(const std::string& countryName, const
     return { 50.f, 50.f };
 }
 
+/**
+ * @brief Construieste UI-ul pentru afisarea iconitelor de provincie (resurse/cladiri) si click zones.
+ *
+ * Pentru fiecare tara si provincie:
+ *  - pregateste o zona de click (ClickZone) pentru selectia tarii
+ *  - genereaza iconite (ResourceIconUI) pentru fiecare StatKind si le plaseaza pe harta
+ *
+ * Populeaza provinceUI (vector 2D) astfel incat randarea si update-ul sa fie rapide.
+ */
 void Interface::setupProvinceUI() {
     const auto& countries = engine.getCountries();
     provinceUI.resize(countries.size());
@@ -242,6 +305,16 @@ void Interface::setupProvinceUI() {
     }
 }
 
+/**
+ * @brief Actualizeaza UI-ul (texte/culori) in functie de tara selectata si ziua curenta.
+ *
+ * Daca nu exista tara selectata, afiseaza jocul ca fiind "PAUSED".
+ * Altfel:
+ *  - actualizeaza valorile resurselor/cladirilor per provincie
+ *  - coloreaza valorile in functie de schimbarea fata de cadrul anterior (verde/rosu/alb)
+ *  - actualizeaza fuel/manpower pentru tara curenta
+ *  - construieste mesajele de alerta (focus/constructii/fabrici militare libere)
+ */
 void Interface::updateUI() {
     if (selectedCountryIndex == -1) { dayText.setString("Day: " + std::to_string(engine.getDay()) + " (PAUSED)"); return; }
     dayText.setString("Day: " + std::to_string(engine.getDay()) + " (Running)");
@@ -291,6 +364,22 @@ void Interface::updateUI() {
     alertText.setString(alertMsg);
 }
 
+/**
+ * @brief Proceseaza evenimentele de input (SFML) si actualizeaza starea UI-ului.
+ *
+ * Controale:
+ *  - ESC: inchide fereastra
+ *  - Q: toggle focus tree (cand exista tara selectata si nu sunt alte moduri active)
+ *  - W: toggle construction mode (cand exista tara selectata si nu sunt alte moduri active)
+ *  - E: toggle production mode (cand exista tara selectata si nu sunt alte moduri active)
+ *  - Click stanga:
+ *      - in focus mode: porneste focus-ul apasat
+ *      - in construction mode: selecteaza tipul de cladire si plaseaza constructie pe provincie
+ *      - in production mode: +/- fabrici pe linie sau adaugare linie noua
+ *      - pe harta: selecteaza tara (dupa clickZones)
+ *  - Click dreapta:
+ *      - inchide modul curent (focus/constructii/productie) sau deselecteaza tara
+ */
 void Interface::handleEvents() {
     sf::Event event{};
     while (window.pollEvent(event)) {
@@ -435,6 +524,15 @@ void Interface::handleEvents() {
     }
 }
 
+/**
+ * @brief Randeaza cadrul curent, in functie de modul activ.
+ *
+ * Moduri:
+ *  - Focus Tree: fundal + iconite focus + highlight pentru activ/completat/hover
+ *  - Construction: harta + iconite provincie + panou constructii + coada constructii
+ *  - Production: harta + iconite provincie + panou productie + linii productie + controale +/- + add line
+ *  - Map (default): harta + iconite + resurse globale (fuel/manpower) + day/info/alerte
+ */
 void Interface::render() {
     window.clear();
 
@@ -644,6 +742,13 @@ void Interface::render() {
     window.display();
 }
 
+/**
+ * @brief Ruleaza bucla principala a interfetei.
+ *
+ * Se proceseaza evenimentele in fiecare cadru. Daca exista o tara selectata, timpul este
+ * acumulat pentru a simula trecerea zilelor la un pas fix (secondsPerDay).
+ * Apoi se actualizeaza UI-ul si se randeaza cadrul.
+ */
 void Interface::run() {
     sf::Clock clock;
     float accumulator = 0.f;
