@@ -328,6 +328,7 @@ void Interface::handleEvents() {
                 }
             }
             else if (showConstruction && selectedCountryIndex != -1) {
+                // --- MOVED DECLARATION HERE ---
                 std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
                 float offsetX = 0.f;
                 float panelWidth = window.getSize().x / 3.0f;
@@ -359,11 +360,6 @@ void Interface::handleEvents() {
                                      sf::Vector2f pos = getIconPositionFor(cName, provs[pi].getName(), StatKind::Steel);
                                      sf::FloatRect pBounds(pos.x - 150.f, pos.y - 150.f, 400.f, 400.f);
                                      if (pBounds.contains(mousePos)) {
-                                         // --- AM MUTAT DEFINITIA AICI PENTRU A REZOLVA VARIABLESCOPE ---
-                                         // Desi currentCountry este deja definit sus, aici il folosim specific.
-                                         // In cazul tau, codul initial avea definitia sus. CppCheck se plangea.
-                                         // In varianta asta am pastrat definitia sus (in if-ul mare) dar am sters
-                                         // variabila nefolosita 'ci' mai jos.
                                          BuildingType type;
                                          if(selectedBuildingType == 0) type = BuildingType::Civ;
                                          else if(selectedBuildingType == 1) type = BuildingType::Mil;
@@ -385,13 +381,13 @@ void Interface::handleEvents() {
                 }
             }
             else if (showProduction && selectedCountryIndex != -1) {
+                // --- MOVED DECLARATION HERE ---
                 Country& currentCountry = engine.getMutableCountries()[selectedCountryIndex];
-                std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
                 float offsetX = 0.f;
                 float panelWidth = window.getSize().x / 3.0f;
                 if (currentCountry.getName() == "Hungary") offsetX = window.getSize().x - panelWidth;
 
-                // --- AM STERS 'std::size_t ci' nefolosit de aici ---
+                // --- REMOVED unused 'ci' variable ---
 
                 const auto& lines = currentCountry.getProductionLines();
                 float currentY = 100.f;
@@ -543,7 +539,6 @@ void Interface::render() {
         const auto& lines = engine.getCountries()[ci].getProductionLines();
         float currentY = 100.f;
 
-        // Luam o referinta catre tara curenta pentru a interoga stocurile
         const Country& currentCountry = engine.getCountries()[ci];
 
         for (const auto& line : lines) {
@@ -592,7 +587,6 @@ void Interface::render() {
             window.draw(plusS);
             window.draw(countT);
 
-            // --- DRAW TOTAL STOCK & DAILY OUTPUT ---
             long long totalStock = currentCountry.getEquipmentCount(line.getType());
             long long dailyProd = line.calculateDailyOutput();
 
