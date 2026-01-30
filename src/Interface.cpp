@@ -1,7 +1,25 @@
+/**
+ * @file Interface.cpp
+ * @brief Implementarea interfeței grafice (GUI) a jocului folosind SFML.
+ *
+ * Acest fișier gestionează desenarea hărții, a meniurilor (Focus Tree, Construcții, Producție),
+ * a iconițelor de resurse și preluarea input-ului de la utilizator (mouse, tastatură).
+ */
+
 #include "../headers/Interface.h"
 #include "../headers/GameExceptions.h"
 #include <iostream>
 
+/**
+ * @brief Constructorul clasei Interface.
+ *
+ * Inițializează fereastra SFML, încarcă toate texturile (harta, iconițe resurse,
+ * elemente UI) și configurează elementele grafice inițiale (texte, sprite-uri).
+ *
+ * @param eng Referință la motorul jocului (Engine).
+ * @param title Titlul ferestrei aplicației.
+ * @throws AssetLoadException Dacă o textură esențială (ex: harta) nu poate fi încărcată.
+ */
 Interface::Interface(Engine& eng, const std::string& title) : engine(eng) {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.create(desktop, title, sf::Style::Fullscreen);
@@ -202,46 +220,6 @@ sf::Vector2f Interface::getIconPositionFor(const std::string& countryName, const
     return { 50.f, 50.f };
 }
 
-void Interface::setupProvinceUI() {
-    const auto& countries = engine.getCountries();
-    provinceUI.resize(countries.size());
-    clickZones.clear();
-
-    for (std::size_t ci = 0; ci < countries.size(); ++ci) {
-        const auto& provs = countries[ci].getProvinces();
-        provinceUI[ci].resize(provs.size());
-        const std::string& countryName = countries[ci].getName();
-
-        for (std::size_t pi = 0; pi < provs.size(); ++pi) {
-            ProvinceUI& pui = provinceUI[ci][pi];
-            const Province& prov = provs[pi];
-            const std::string& provName = prov.getName();
-
-            sf::Vector2f refPos = getIconPositionFor(countryName, provName, StatKind::Steel);
-            ClickZone zone;
-            zone.bounds = sf::FloatRect(refPos.x - 150.f, refPos.y - 150.f, 400.f, 400.f);
-            zone.countryIndex = static_cast<int>(ci);
-            clickZones.push_back(zone);
-
-            auto makeIcon = [&](StatKind kind, sf::Texture& tex) {
-                ResourceIconUI ui; ui.kind = kind; ui.icon.setTexture(tex); ui.icon.setScale(0.5f, 0.5f);
-                sf::Vector2f pos = getIconPositionFor(countryName, provName, kind);
-                ui.icon.setPosition(pos);
-                ui.value.setFont(font); ui.value.setCharacterSize(16); ui.value.setFillColor(sf::Color::White);
-                ui.value.setString("0"); ui.value.setPosition(pos.x + 32.f, pos.y + 4.f);
-                ui.lastValue = -1;
-                pui.resourceIcons.push_back(ui);
-            };
-
-            makeIcon(StatKind::Steel,    steelTex); makeIcon(StatKind::Tungsten, tungstenTex);
-            makeIcon(StatKind::Aluminum, aluminumTex); makeIcon(StatKind::Chromium, chromiumTex);
-            makeIcon(StatKind::Oil,      oilTex); makeIcon(StatKind::Civ,      civTex);
-            makeIcon(StatKind::Mil,      milTex); makeIcon(StatKind::Infra,    infraTex);
-            makeIcon(StatKind::Dockyard, dockyardTex); makeIcon(StatKind::Airfield, airfieldTex);
-        }
-    }
-}
-
 void Interface::updateUI() {
     if (selectedCountryIndex == -1) { dayText.setString("Day: " + std::to_string(engine.getDay()) + " (PAUSED)"); return; }
     dayText.setString("Day: " + std::to_string(engine.getDay()) + " (Running)");
@@ -291,6 +269,19 @@ void Interface::updateUI() {
     alertText.setString(alertMsg);
 }
 
+/**
+ * @brief Gestionează toate evenimentele de input (tastatură și mouse).
+ *
+ * Această funcție tratează:
+ * - Închiderea ferestrei (ESC sau buton X).
+ * - Schimbarea modurilor de vizualizare (Harta, Construcții, Producție, Focus) folosind tastele Q, W, E.
+ * - Click-uri de mouse pentru:
+ * - Selectarea unei țări de pe hartă.
+ * - Interacțiunea cu butoanele din meniuri (ex: adăugare fabrici, selectare focus, construire clădiri).
+ * - Deselectarea (Click dreapta).
+ *
+ * Logica este împărțită pe "stări" (states): Focus Tree, Construction, Production și Map Mode.
+ */
 void Interface::handleEvents() {
     sf::Event event{};
     while (window.pollEvent(event)) {
@@ -435,6 +426,18 @@ void Interface::handleEvents() {
     }
 }
 
+/**
+ * @brief Desenează toate elementele jocului pe ecran.
+ *
+ * Această funcție este apelată la fiecare cadru (frame).
+ * Logica de desenare este condiționată de starea curentă a interfeței:
+ * - **Focus Tree**: Desenează fundalul și arborele de focus.
+ * - **Construction**: Desenează harta, overlay-ul de resurse și meniul lateral de construcții.
+ * - **Production**: Desenează harta și meniul lateral de producție.
+ * - **Map Mode (Default)**: Desenează harta, resursele și informațiile generale.
+ *
+ * Funcția gestionează și poziționarea dinamică a meniurilor (stânga/dreapta) în funcție de țara selectată.
+ */
 void Interface::render() {
     window.clear();
 
