@@ -328,7 +328,6 @@ void Interface::handleEvents() {
                 }
             }
             else if (showConstruction && selectedCountryIndex != -1) {
-                // --- MOVED DECLARATION HERE ---
                 std::size_t ci = static_cast<std::size_t>(selectedCountryIndex);
                 float offsetX = 0.f;
                 float panelWidth = window.getSize().x / 3.0f;
@@ -343,7 +342,6 @@ void Interface::handleEvents() {
                 }
 
                 if (selectedBuildingType != -1) {
-                    Country& currentCountry = engine.getMutableCountries()[selectedCountryIndex];
                     bool clickOnMap = false;
                     if (engine.getCountries()[ci].getName() == "Hungary") {
                         if (mousePos.x < offsetX) clickOnMap = true;
@@ -354,6 +352,8 @@ void Interface::handleEvents() {
                     if (clickOnMap) {
                          for (const auto& zone : clickZones) {
                              if (zone.countryIndex == selectedCountryIndex && zone.bounds.contains(mousePos)) {
+                                 // --- MOVED DEFINITION HERE FOR VARIABLE SCOPE ---
+                                 Country& currentCountry = engine.getMutableCountries()[selectedCountryIndex];
                                  const auto& provs = currentCountry.getProvinces();
                                  const std::string& cName = currentCountry.getName();
                                  for(int pi=0; pi < (int)provs.size(); ++pi) {
@@ -381,13 +381,10 @@ void Interface::handleEvents() {
                 }
             }
             else if (showProduction && selectedCountryIndex != -1) {
-                // --- MOVED DECLARATION HERE ---
                 Country& currentCountry = engine.getMutableCountries()[selectedCountryIndex];
                 float offsetX = 0.f;
                 float panelWidth = window.getSize().x / 3.0f;
                 if (currentCountry.getName() == "Hungary") offsetX = window.getSize().x - panelWidth;
-
-                // --- REMOVED unused 'ci' variable ---
 
                 const auto& lines = currentCountry.getProductionLines();
                 float currentY = 100.f;
