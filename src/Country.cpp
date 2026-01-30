@@ -1,8 +1,3 @@
-/**
- * @file Country.cpp
- * @brief Implementarea logicii principale pentru o țară.
- */
-
 #include "../headers/Country.h"
 #include "../headers/GameExceptions.h"
 #include <sstream>
@@ -10,10 +5,6 @@
 #include <cstdlib>
 #include <iostream>
 
-/**
- * @brief Constructorul principal.
- * Inițializează țara cu provinciile și resursele sale.
- */
 Country::Country(std::string n, std::string id, std::vector<Province> p, ResourceStockpile r)
     : name(std::move(n)), ideology(std::move(id)), provinces(std::move(p)), resources(r) {
 }
@@ -88,6 +79,8 @@ int Country::getUsedMilFactories() const {
     return used;
 }
 
+/// 
+/// @return 
 int Country::getFreeMilFactories() const {
     return totalMil() - getUsedMilFactories();
 }
@@ -130,23 +123,6 @@ bool Country::startFocus(int index) {
     return focusTree.startFocus(index);
 }
 
-/**
- * @brief Adaugă o construcție în coada de așteptare, verificând regulile jocului.
- *
- * Această funcție este critică pentru mecanica jocului deoarece:
- * 1. Validează indexul provinciei.
- * 2. Parcurge întreaga coadă curentă de construcții pentru a vedea ce este deja planificat (queued).
- * 3. Aplică regulile stricte de limitare a clădirilor per provincie (Hard Limits):
- * - Infrastructură: Maxim 5.
- * - Aeroporturi: Maxim 10.
- * - Industrie (Civ/Mil/Dock): Maxim 6 sloturi industriale.
- * 4. Determină costul de producție (IC) în funcție de tipul clădirii.
- *
- * @param type Tipul clădirii de construit.
- * @param provinceIndex Indexul provinciei țintă.
- * @param count Numărul de clădiri solicitate.
- * @throws GameException Dacă limita maximă a provinciei ar fi depășită.
- */
 void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
     if (count <= 0) return;
     if (provinceIndex < 0 || static_cast<std::size_t>(provinceIndex) >= provinces.size())
@@ -154,7 +130,6 @@ void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
 
     const Province &prov = provinces[provinceIndex];
 
-    // Calculăm clădirile deja aflate în coada de așteptare
     int queuedCiv = 0;
     int queuedMil = 0;
     int queuedInfra = 0;
@@ -178,7 +153,6 @@ void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
         }
     }
 
-    // Verificăm limitele jocului (Clădiri existente + Clădiri în coadă + Cererea curentă)
     if (type == BuildingType::Infra) {
         if (prov.getInfra() + queuedInfra + count > 5) throw GameException(
             "Limita atinsa: Infrastructura maxima este 5!");
@@ -211,24 +185,9 @@ void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
     }
 }
 
-/**
- * @brief Nucleul logic al jocului: avansează simularea cu o zi.
- *
- * Această funcție gestionează toate aspectele economice și militare zilnice:
- * 1. **Resurse:** Actualizează bonusurile resurselor locale în fiecare provincie.
- * 2. **Producție Militară:** Iterează prin toate liniile de producție, calculează output-ul zilnic
- * (Daily Output) și adaugă echipamentul finit în stocul național.
- * 3. **Construcții:** Calculează puterea totală de construcție (Total Civs * 5).
- * Aceasta este aplicată primei construcții din coadă. Dacă se finalizează, clădirea
- * este adăugată efectiv provinciei.
- * 4. **Focus Național:** Verifică progresul focusului politic. Dacă se finalizează un pas (tickRaw),
- * aplică efectul aleatoriu (RNG) asupra unei provincii random.
- */
 void Country::simulateDay() {
-    // 1. Efecte resurse
     for (const auto &p: provinces) p.applyResourceEffects(resources);
 
-    // 2. Producție militară
     for (const auto &l: milLines) {
         long long units = l.calculateDailyOutput();
         switch (l.getType()) {
@@ -243,7 +202,6 @@ void Country::simulateDay() {
         }
     }
 
-    // 3. Construcții
     double dailyBP = totalCiv() * CIV_OUTPUT_PER_DAY;
     if (!constructions.isEmpty()) {
         Construction &c = constructions.front();
@@ -264,14 +222,12 @@ void Country::simulateDay() {
                             break;
                     }
                 } catch (...) {
-                    // Ignorăm erorile la finalizare
                 }
             }
             constructions.removeFirst();
         }
     }
 
-    // 4. Focus Tree
     int effRaw = focusTree.tickRaw();
     if (effRaw != -1 && !provinces.empty()) {
         int i = std::rand() % static_cast<int>(provinces.size());
