@@ -1,3 +1,14 @@
+/**
+ * @file Country.cpp
+ * @brief Implementarea clasei Country: gestiune provincii, productie, constructii si focus tree.
+ *
+ * Fisierul contine implementarea metodelor pentru:
+ *  - agregarea statisticilor din provincii (fabrici, resurse)
+ *  - managementul liniilor de productie militara
+ *  - coada de constructii si progres zilnic
+ *  - tick zilnic (simulateDay) incluzand focus tree effects
+ */
+
 #include "../headers/Country.h"
 #include "../headers/GameExceptions.h"
 #include <sstream>
@@ -5,16 +16,32 @@
 #include <cstdlib>
 #include <iostream>
 
+/**
+ * @brief Constructor cu mutare pentru a initializa complet un Country.
+ * @param n Numele tarii.
+ * @param id Ideologia (string identificator).
+ * @param p Vectorul de provincii.
+ * @param r Stocul initial de resurse.
+ */
 Country::Country(std::string n, std::string id, std::vector<Province> p, ResourceStockpile r)
     : name(std::move(n)), ideology(std::move(id)), provinces(std::move(p)), resources(r) {
 }
 
+/**
+ * @brief Copy-constructor.
+ * @param other Obiectul sursa.
+ */
 Country::Country(const Country &other)
     : name(other.name), ideology(other.ideology), provinces(other.provinces),
       resources(other.resources), equipment(other.equipment),
       milLines(other.milLines), constructions(other.constructions), focusTree(other.focusTree) {
 }
 
+/**
+ * @brief Operator de atribuire (copy assignment).
+ * @param other Obiectul sursa.
+ * @return Referinta la obiectul curent dupa copiere.
+ */
 Country &Country::operator=(const Country &other) {
     if (this != &other) {
         name = other.name;
@@ -29,48 +56,80 @@ Country &Country::operator=(const Country &other) {
     return *this;
 }
 
+/**
+ * @brief Calculeaza totalul de fabrici civile din toate provinciile.
+ * @return Numarul total de fabrici civile.
+ */
 int Country::totalCiv() const {
     int s = 0;
     for (const auto &p: provinces) s += p.getCiv();
     return s;
 }
 
+/**
+ * @brief Calculeaza totalul de fabrici militare din toate provinciile.
+ * @return Numarul total de fabrici militare.
+ */
 int Country::totalMil() const {
     int s = 0;
     for (const auto &p: provinces) s += p.getMil();
     return s;
 }
 
+/**
+ * @brief Calculeaza totalul de petrol (oil) din toate provinciile.
+ * @return Totalul de oil.
+ */
 int Country::totalOil() const {
     int s = 0;
     for (const auto &p: provinces) s += p.getOil();
     return s;
 }
 
+/**
+ * @brief Calculeaza totalul de otel (steel) din toate provinciile.
+ * @return Totalul de steel.
+ */
 int Country::totalSteel() const {
     int s = 0;
     for (const auto &p: provinces) s += p.getSteel();
     return s;
 }
 
+/**
+ * @brief Calculeaza totalul de tungsten din toate provinciile.
+ * @return Totalul de tungsten.
+ */
 int Country::totalTungsten() const {
     int s = 0;
     for (const auto &p: provinces) s += p.getTungsten();
     return s;
 }
 
+/**
+ * @brief Calculeaza totalul de aluminiu (aluminum) din toate provinciile.
+ * @return Totalul de aluminum.
+ */
 int Country::totalAluminum() const {
     int s = 0;
     for (const auto &p: provinces) s += p.getAluminum();
     return s;
 }
 
+/**
+ * @brief Calculeaza totalul de crom (chromium) din toate provinciile.
+ * @return Totalul de chromium.
+ */
 int Country::totalChromium() const {
     int s = 0;
     for (const auto &p: provinces) s += p.getChromium();
     return s;
 }
 
+/**
+ * @brief Calculeaza cate fabrici militare sunt deja alocate pe liniile de productie.
+ * @return Numarul de fabrici militare utilizate.
+ */
 int Country::getUsedMilFactories() const {
     int used = 0;
     for (const auto &line: milLines) {
@@ -79,12 +138,25 @@ int Country::getUsedMilFactories() const {
     return used;
 }
 
-/// 
-/// @return 
+/**
+ * @brief Calculeaza cate fabrici militare sunt disponibile (nealocate) pentru productie.
+ *
+ * Valoarea este diferenta dintre totalul de fabrici militare si fabricile deja alocate
+ * pe liniile de productie.
+ *
+ * @return Numarul de fabrici militare libere.
+ */
 int Country::getFreeMilFactories() const {
     return totalMil() - getUsedMilFactories();
 }
 
+/**
+ * @brief Adauga o noua linie de productie pentru un tip de echipament.
+ *
+ * Aloca implicit 1 fabrica daca exista fabrici militare libere; altfel aloca 0.
+ *
+ * @param t Tipul de echipament produs pe linie.
+ */
 void Country::addProductionLine(EquipmentType t) {
     int factoriesToAssign = 1;
     if (getFreeMilFactories() <= 0) {
@@ -93,6 +165,16 @@ void Country::addProductionLine(EquipmentType t) {
     milLines.push_back(ProductionLine(t, factoriesToAssign, 0.0));
 }
 
+/**
+ * @brief Modifica numarul de fabrici alocate unei linii de productie.
+ *
+ * Daca amount > 0: incearca sa adauge fabrici (doar daca sunt suficiente libere).
+ * Daca amount < 0: scoate fabrici, dar fara a scadea sub 0.
+ * Daca index este invalid: nu face nimic.
+ *
+ * @param index Indexul liniei in vectorul de linii de productie.
+ * @param amount Diferenta de fabrici (pozitiv / negativ).
+ */
 void Country::modifyLineFactories(int index, int amount) {
     if (index < 0 || index >= static_cast<int>(milLines.size())) return;
     ProductionLine &line = milLines[index];
@@ -109,6 +191,11 @@ void Country::modifyLineFactories(int index, int amount) {
     }
 }
 
+/**
+ * @brief Obtine cantitatea curenta dintr-un tip de echipament.
+ * @param t Tipul de echipament cerut.
+ * @return Numarul de unitati din tipul respectiv.
+ */
 long long Country::getEquipmentCount(EquipmentType t) const {
     switch (t) {
         case EquipmentType::Gun: return equipment.getGuns();
@@ -119,10 +206,32 @@ long long Country::getEquipmentCount(EquipmentType t) const {
     return 0;
 }
 
+/**
+ * @brief Porneste un focus din focus tree.
+ * @param index Indexul focus-ului (conform structurii focusTree).
+ * @return true daca focus-ul a pornit cu succes, false altfel.
+ */
 bool Country::startFocus(int index) {
     return focusTree.startFocus(index);
 }
 
+/**
+ * @brief Adauga constructii in coada pentru o anumita provincie.
+ *
+ * Valideaza:
+ *  - count > 0
+ *  - index provincie valid
+ *  - limite maxime (inclusiv ce este deja in coada pentru acea provincie)
+ *
+ * Costul per constructie depinde de tipul cladirii.
+ *
+ * @param type Tipul cladirii care se construieste.
+ * @param provinceIndex Indexul provinciei tinta.
+ * @param count Numarul de cladiri de adaugat in coada.
+ *
+ * @throws InvalidProvinceIndexException daca provinceIndex este invalid.
+ * @throws GameException daca se depaseste o limita maxima pentru tipul selectat.
+ */
 void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
     if (count <= 0) return;
     if (provinceIndex < 0 || static_cast<std::size_t>(provinceIndex) >= provinces.size())
@@ -185,6 +294,15 @@ void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
     }
 }
 
+/**
+ * @brief Simuleaza o zi de joc pentru tara curenta.
+ *
+ * Include:
+ *  - aplicarea efectelor de resurse la nivel de provincie
+ *  - productia zilnica a liniilor militare (adauga echipament)
+ *  - progresul pe prima constructie din coada (daca exista)
+ *  - tick pentru focus tree si aplicarea unui efect random pe o provincie (daca exista efect)
+ */
 void Country::simulateDay() {
     for (const auto &p: provinces) p.applyResourceEffects(resources);
 
@@ -244,10 +362,20 @@ void Country::simulateDay() {
     }
 }
 
+/**
+ * @brief Returneaza o reprezentare text a tarii.
+ * @return String cu informatii de baza despre tara.
+ */
 std::string Country::toString() const {
     std::ostringstream ss;
     ss << "Country(" << name << ")\n";
     return ss.str();
 }
 
+/**
+ * @brief Operator de stream pentru afisarea unui Country.
+ * @param os Stream-ul de iesire.
+ * @param c Tara de afisat.
+ * @return Referinta la stream-ul de iesire.
+ */
 std::ostream &operator<<(std::ostream &os, const Country &c) { return os << c.toString(); }
