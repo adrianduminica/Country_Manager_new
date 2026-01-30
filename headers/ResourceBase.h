@@ -14,15 +14,17 @@ protected:
     static int globalCount;
 
     AbstractResource(std::string name, int amount);
-    virtual void printImpl(std::ostream& os) const = 0;
+
+    virtual void printImpl(std::ostream &os) const = 0;
 
 public:
     virtual ~AbstractResource();
 
-    const std::string& getName() const { return name; }
+    const std::string &getName() const { return name; }
     int getAmount() const { return amount; }
 
-    virtual void applyDailyEffect(ResourceStockpile& stockpile) const = 0;
+    virtual void applyDailyEffect(ResourceStockpile &stockpile) const = 0;
+
     virtual std::unique_ptr<AbstractResource> clone() const = 0;
 
     // --- CERINTA: Mai multe functii virtuale ---
@@ -35,7 +37,7 @@ public:
     // Returneaza true daca resursa este critica pentru razboi
     virtual bool isStrategic() const { return false; }
 
-    void print(std::ostream& os) const { printImpl(os); }
+    void print(std::ostream &os) const { printImpl(os); }
 
     static int getGlobalCount() { return globalCount; }
 };
@@ -44,15 +46,17 @@ class MaterialResource : public AbstractResource {
 public:
     MaterialResource(std::string name, int amount);
 
-    void applyDailyEffect(ResourceStockpile& stockpile) const override;
+    void applyDailyEffect(ResourceStockpile &stockpile) const override;
+
     std::unique_ptr<AbstractResource> clone() const override;
 
     // Implementari virtuale
     std::string getCategory() const override;
+
     bool isStrategic() const override;
 
 protected:
-    void printImpl(std::ostream& os) const override;
+    void printImpl(std::ostream &os) const override;
 };
 
 class DailyOutputResource : public AbstractResource {
@@ -61,15 +65,17 @@ class DailyOutputResource : public AbstractResource {
 public:
     DailyOutputResource(std::string name, int amount, int fuelPerUnitPerDay);
 
-    void applyDailyEffect(ResourceStockpile& stockpile) const override;
+    void applyDailyEffect(ResourceStockpile &stockpile) const override;
+
     std::unique_ptr<AbstractResource> clone() const override;
 
     // Implementari virtuale
     std::string getCategory() const override;
+
     // Foloseste isStrategic() din baza (false)
 
 protected:
-    void printImpl(std::ostream& os) const override;
+    void printImpl(std::ostream &os) const override;
 };
 
 enum class ConstructionType {
@@ -94,18 +100,20 @@ public:
     // Accesarea ei justifica folosirea dynamic_cast.
     ConstructionType getType() const { return type; }
 
-    void applyDailyEffect(ResourceStockpile& stockpile) const override;
+    void applyDailyEffect(ResourceStockpile &stockpile) const override;
+
     std::unique_ptr<AbstractResource> clone() const override;
 
     // Implementari virtuale
     std::string getCategory() const override;
+
     bool isStrategic() const override;
 
 protected:
-    void printImpl(std::ostream& os) const override;
+    void printImpl(std::ostream &os) const override;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const AbstractResource& r) {
+inline std::ostream &operator<<(std::ostream &os, const AbstractResource &r) {
     r.print(os);
     return os;
 }

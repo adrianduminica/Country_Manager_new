@@ -2,10 +2,12 @@
 #include <sstream>
 
 ResourceStockpile::ResourceStockpile()
-    : fuel(0), manpower(0) {}
+    : fuel(0), manpower(0) {
+}
 
 ResourceStockpile::ResourceStockpile(int fuel, int manpower)
-    : fuel(fuel), manpower(manpower) {}
+    : fuel(fuel), manpower(manpower) {
+}
 
 int ResourceStockpile::getFuel() const {
     return fuel;
@@ -16,7 +18,7 @@ int ResourceStockpile::getManpower() const {
 }
 
 void ResourceStockpile::add(int dFuel, int dManpower) {
-    fuel     = clampNonNeg(fuel     + dFuel);
+    fuel = clampNonNeg(fuel + dFuel);
     manpower = clampNonNeg(manpower + dManpower);
 }
 
@@ -27,6 +29,6 @@ std::string ResourceStockpile::toString() const {
 }
 
 
-std::ostream& operator<<(std::ostream& os, const ResourceStockpile& r) {
+std::ostream &operator<<(std::ostream &os, const ResourceStockpile &r) {
     return os << r.toString();
 }

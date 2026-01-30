@@ -23,25 +23,24 @@ Province::Province(std::string name,
       tungsten(tungsten),
       aluminum(aluminum),
       chromium(chromium),
-      oil(oil)
-{
-    if (population < 0)    population = 0;
-    if (civFactories < 0)  civFactories = 0;
-    if (milFactories < 0)  milFactories = 0;
+      oil(oil) {
+    if (population < 0) population = 0;
+    if (civFactories < 0) civFactories = 0;
+    if (milFactories < 0) milFactories = 0;
 
 
     infrastructure = GameUtils::ensureRange<int>(infrastructure, 0, 10);
 
-    if (steel < 0)    this->steel    = 0;
+    if (steel < 0) this->steel = 0;
     if (tungsten < 0) this->tungsten = 0;
     if (aluminum < 0) this->aluminum = 0;
     if (chromium < 0) this->chromium = 0;
-    if (oil < 0)      this->oil      = 0;
+    if (oil < 0) this->oil = 0;
 
     initResources();
 }
 
-Province::Province(const Province& other)
+Province::Province(const Province &other)
     : name(other.name),
       population(other.population),
       civFactories(other.civFactories),
@@ -57,23 +56,21 @@ Province::Province(const Province& other)
       tungsten(other.tungsten),
       aluminum(other.aluminum),
       chromium(other.chromium),
-      oil(other.oil)
-{
+      oil(other.oil) {
     resources.clear();
     resources.reserve(other.resources.size());
-    for (const auto& resPtr : other.resources) {
+    for (const auto &resPtr: other.resources) {
         resources.push_back(resPtr->clone());
     }
 }
 
-Province& Province::operator=(Province other) {
+Province &Province::operator=(Province other) {
     swap(*this, other);
     return *this;
 }
 
 void Province::initResources() {
     resources.clear();
-
 
 
     if (steel > 0)
@@ -93,14 +90,13 @@ void Province::initResources() {
     if (milFactories > 0)
         resources.push_back(ResourceFactory::createConstruction("Mil factories", milFactories, ConstructionType::Mil));
     if (infrastructure > 0)
-        resources.push_back(ResourceFactory::createConstruction("Infrastructure", infrastructure, ConstructionType::Infra));
+        resources.push_back(
+            ResourceFactory::createConstruction("Infrastructure", infrastructure, ConstructionType::Infra));
 
     if (dockyards > 0)
         resources.push_back(ResourceFactory::createConstruction("Dockyards", dockyards, ConstructionType::Dockyard));
     if (airfields > 0)
         resources.push_back(ResourceFactory::createConstruction("Airfields", airfields, ConstructionType::Airfield));
-
-
 }
 
 void Province::addCiv(int x) {
@@ -114,7 +110,6 @@ void Province::addMil(int x) {
 }
 
 void Province::addInfra(int x) {
-
     infrastructure = GameUtils::ensureRange<int>(infrastructure + x, 0, 10);
     initResources();
 }
@@ -129,16 +124,16 @@ void Province::addAirfield(int x) {
     initResources();
 }
 
-void Province::applyResourceEffects(ResourceStockpile& stockpile) const {
-    for (const auto& res : resources) {
+void Province::applyResourceEffects(ResourceStockpile &stockpile) const {
+    for (const auto &res: resources) {
         res->applyDailyEffect(stockpile);
     }
 }
 
 int Province::totalConstructionSlotsFromResources() const {
     int total = 0;
-    for (const auto& res : resources) {
-        if (auto* cr = dynamic_cast<const ConstructionResource*>(res.get())) {
+    for (const auto &res: resources) {
+        if (auto *cr = dynamic_cast<const ConstructionResource *>(res.get())) {
             if (cr->getType() != ConstructionType::Infra) {
                 total += cr->getAmount();
             }
@@ -150,20 +145,20 @@ int Province::totalConstructionSlotsFromResources() const {
 std::string Province::toString() const {
     std::ostringstream ss;
     ss << "Province(" << getName() << ") pop=" << getPopulation()
-       << ", CIV=" << getCiv()
-       << ", MIL=" << getMil()
-       << ", INFRA=" << getInfra()
-       << ", RES[Steel=" << getSteel()
-       << ", Tung=" << getTungsten()
-       << ", Alu=" << getAluminum()
-       << ", Chr=" << getChromium()
-       << ", Oil=" << getOil() << "]"
-       << ", DOCKYARDS=" << getDockyards()
-       << ", AIRFIELDS=" << getAirfields()
-       << ", FACILITIES[Army=" << getArmyRF()
-       << ",Naval=" << getNavalRF()
-       << ",Aerial=" << getAerialRF()
-       << ",Nuclear=" << getNuclearRF() << "]";
+            << ", CIV=" << getCiv()
+            << ", MIL=" << getMil()
+            << ", INFRA=" << getInfra()
+            << ", RES[Steel=" << getSteel()
+            << ", Tung=" << getTungsten()
+            << ", Alu=" << getAluminum()
+            << ", Chr=" << getChromium()
+            << ", Oil=" << getOil() << "]"
+            << ", DOCKYARDS=" << getDockyards()
+            << ", AIRFIELDS=" << getAirfields()
+            << ", FACILITIES[Army=" << getArmyRF()
+            << ",Naval=" << getNavalRF()
+            << ",Aerial=" << getAerialRF()
+            << ",Nuclear=" << getNuclearRF() << "]";
 
     ss << ", RES_OBJS={";
     for (std::size_t i = 0; i < resources.size(); ++i) {
@@ -175,6 +170,6 @@ std::string Province::toString() const {
     return ss.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const Province& p) {
+std::ostream &operator<<(std::ostream &os, const Province &p) {
     return os << p.toString();
 }

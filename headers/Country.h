@@ -11,7 +11,7 @@
 #include "ProductionLine.h"
 #include "Construction.h"
 #include "FocusTree.h"
-#include "ProductionQueue.h" // <--- Includem Clasa Sablon
+#include "ProductionQueue.h"
 
 class Country {
     std::string name;
@@ -19,11 +19,8 @@ class Country {
     std::vector<Province> provinces;
     ResourceStockpile resources;
     EquipmentStockpile equipment;
-
-
     ProductionQueue<ProductionLine> milLines;
     ProductionQueue<Construction> constructions;
-
     FocusTree focusTree;
 
     static constexpr int MIL_OUTPUT = 1000;
@@ -31,25 +28,32 @@ class Country {
     static constexpr double CIV_OUTPUT_PER_DAY = 5.0;
 
 public:
-    Country(std::string n,
-            std::string id,
-            std::vector<Province> p,
-            ResourceStockpile r);
+    Country(std::string n, std::string id, std::vector<Province> p, ResourceStockpile r);
 
-    Country(const Country& other);
-    Country& operator=(const Country& other);
+    Country(const Country &other);
+
+    Country &operator=(const Country &other);
+
     ~Country() = default;
 
     int totalCiv() const;
+
     int totalMil() const;
+
     int totalOil() const;
+
     int totalSteel() const;
+
     int totalTungsten() const;
+
     int totalAluminum() const;
+
     int totalChromium() const;
 
     void addProductionLine(EquipmentType t, int factories);
-    void startFocus(int index);
+
+    // --- MODIFICARE: Returneaza bool (succes/esec) ---
+    bool startFocus(int index);
 
     void addConstruction(BuildingType type, int provinceIndex, int count = 1);
 
@@ -57,12 +61,14 @@ public:
 
     std::string toString() const;
 
-    const std::string& getName() const { return name; }
-    const std::vector<Province>& getProvinces() const { return provinces; }
+    const std::string &getName() const { return name; }
+    const std::vector<Province> &getProvinces() const { return provinces; }
+    const ResourceStockpile &getResourceStockpile() const { return resources; }
 
-    const ResourceStockpile& getResourceStockpile() const { return resources; }
+    // --- MODIFICARE: Getter necesar pentru UI ---
+    const FocusTree &getFocusTree() const { return focusTree; }
 };
 
-std::ostream& operator<<(std::ostream& os, const Country& c);
+std::ostream &operator<<(std::ostream &os, const Country &c);
 
 #endif

@@ -9,15 +9,16 @@
 // Centralizează crearea resurselor, eliminând dependența directă de "new" în Province.
 class ResourceFactory {
 public:
-    static std::unique_ptr<AbstractResource> createMaterial(const std::string& name, int amount) {
+    static std::unique_ptr<AbstractResource> createMaterial(const std::string &name, int amount) {
         return std::make_unique<MaterialResource>(name, amount);
     }
 
-    static std::unique_ptr<AbstractResource> createDailyOutput(const std::string& name, int amount, int fuelRatio) {
+    static std::unique_ptr<AbstractResource> createDailyOutput(const std::string &name, int amount, int fuelRatio) {
         return std::make_unique<DailyOutputResource>(name, amount, fuelRatio);
     }
 
-    static std::unique_ptr<AbstractResource> createConstruction(const std::string& name, int amount, ConstructionType type) {
+    static std::unique_ptr<AbstractResource> createConstruction(const std::string &name, int amount,
+                                                                ConstructionType type) {
         return std::make_unique<ConstructionResource>(name, amount, type);
     }
 };

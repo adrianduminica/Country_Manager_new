@@ -27,8 +27,11 @@ public:
     bool progress(double dailyBP);
 
     BuildingType getType() const;
+
     int getProvinceIndex() const;
+
     double getRemainingBP() const;
+
     double getTotalCost() const;
 
     std::string toString() const;

@@ -6,7 +6,8 @@ Construction::Construction(BuildingType type, int provinceIndex, double totalCos
     : type(type),
       provinceIndex(provinceIndex),
       remainingBP(totalCost),
-      totalCost(totalCost) {}
+      totalCost(totalCost) {
+}
 
 bool Construction::progress(double dailyBP) {
     remainingBP -= dailyBP;
@@ -24,7 +25,7 @@ double Construction::getTotalCost() const { return totalCost; }
 std::string Construction::toString() const {
     std::ostringstream ss;
     ss << "[" << static_cast<int>(getType()) << "] "
-       << getRemainingBP() << "/" << getTotalCost()
-       << " BP left in province " << getProvinceIndex();
+            << getRemainingBP() << "/" << getTotalCost()
+            << " BP left in province " << getProvinceIndex();
     return ss.str();
 }

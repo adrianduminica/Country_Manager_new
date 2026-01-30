@@ -13,25 +13,25 @@ class CountryBuilder {
     ResourceStockpile resources;
 
 public:
+    CountryBuilder() : resources(0, 0) {
+    }
 
-    CountryBuilder() : resources(0, 0) {}
-
-    CountryBuilder& setName(const std::string& n) {
+    CountryBuilder &setName(const std::string &n) {
         name = n;
         return *this;
     }
 
-    CountryBuilder& setIdeology(const std::string& id) {
+    CountryBuilder &setIdeology(const std::string &id) {
         ideology = id;
         return *this;
     }
 
-    CountryBuilder& setStockpile(int fuel, int manpower) {
+    CountryBuilder &setStockpile(int fuel, int manpower) {
         resources = ResourceStockpile(fuel, manpower);
         return *this;
     }
 
-    CountryBuilder& addProvince(const Province& p) {
+    CountryBuilder &addProvince(const Province &p) {
         provinces.push_back(p);
         return *this;
     }

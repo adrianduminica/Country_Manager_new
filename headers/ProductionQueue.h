@@ -4,13 +4,13 @@
 #include <vector>
 
 
-template <typename T>
+template<typename T>
 class ProductionQueue {
     std::vector<T> queue;
 
 public:
     // Adăugare element la final
-    void add(const T& item) {
+    void add(const T &item) {
         queue.push_back(item);
     }
 
@@ -20,11 +20,11 @@ public:
     }
 
     // Acces la primul element
-    T& front() {
+    T &front() {
         return queue.front();
     }
-    
-    const T& front() const {
+
+    const T &front() const {
         return queue.front();
     }
 

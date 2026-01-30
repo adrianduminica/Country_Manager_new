@@ -12,15 +12,18 @@ class ResourceStockpile {
 
 public:
     ResourceStockpile();
+
     ResourceStockpile(int fuel, int manpower);
 
-    int  getFuel() const;
-    int  getManpower() const;
+    int getFuel() const;
+
+    int getManpower() const;
 
     void add(int dFuel, int dManpower);
+
     std::string toString() const;
 };
 
-std::ostream& operator<<(std::ostream& os, const ResourceStockpile& r);
+std::ostream &operator<<(std::ostream &os, const ResourceStockpile &r);
 
 #endif // RESOURCE_STOCKPILE_H

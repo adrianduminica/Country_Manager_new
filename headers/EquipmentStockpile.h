@@ -12,18 +12,24 @@ class EquipmentStockpile {
 
 public:
     void addGuns(long long n);
+
     void addArtillery(long long n);
+
     void addAntiAir(long long n);
+
     void addCAS(long long n);
 
     long long getGuns() const;
+
     long long getArtillery() const;
+
     long long getAntiAir() const;
+
     long long getCAS() const;
 
     std::string toString() const;
 };
 
-std::ostream& operator<<(std::ostream& os, const EquipmentStockpile& e);
+std::ostream &operator<<(std::ostream &os, const EquipmentStockpile &e);
 
 #endif // EQUIPMENT_STOCKPILE_H

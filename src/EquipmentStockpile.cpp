@@ -36,12 +36,12 @@ long long EquipmentStockpile::getCAS() const {
 std::string EquipmentStockpile::toString() const {
     std::ostringstream ss;
     ss << "Guns=" << getGuns()
-       << ", Artillery=" << getArtillery()
-       << ", AA=" << getAntiAir()
-       << ", CAS=" << getCAS();
+            << ", Artillery=" << getArtillery()
+            << ", AA=" << getAntiAir()
+            << ", CAS=" << getCAS();
     return ss.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const EquipmentStockpile& e) {
+std::ostream &operator<<(std::ostream &os, const EquipmentStockpile &e) {
     return os << e.toString();
 }
