@@ -19,7 +19,7 @@ class Country {
     std::vector<Province> provinces;
     ResourceStockpile resources;
     EquipmentStockpile equipment;
-    ProductionQueue<ProductionLine> milLines;
+    std::vector<ProductionLine> milLines;
     ProductionQueue<Construction> constructions;
     FocusTree focusTree;
 
@@ -29,32 +29,53 @@ class Country {
 
 public:
     Country(std::string n, std::string id, std::vector<Province> p, ResourceStockpile r);
-    Country(const Country& other);
-    Country& operator=(const Country& other);
+
+    Country(const Country &other);
+
+    Country &operator=(const Country &other);
+
     ~Country() = default;
 
     int totalCiv() const;
+
     int totalMil() const;
+
     int totalOil() const;
+
     int totalSteel() const;
+
     int totalTungsten() const;
+
     int totalAluminum() const;
+
     int totalChromium() const;
 
-    void addProductionLine(EquipmentType t, int factories);
+    int getUsedMilFactories() const;
+
+    int getFreeMilFactories() const;
+
+    void modifyLineFactories(int index, int amount);
+
+    long long getEquipmentCount(EquipmentType t) const;
+
+    void addProductionLine(EquipmentType t);
+
     bool startFocus(int index);
+
     void addConstruction(BuildingType type, int provinceIndex, int count = 1);
 
     void simulateDay();
+
     std::string toString() const;
 
-    const std::string& getName() const { return name; }
-    const std::vector<Province>& getProvinces() const { return provinces; }
-    const ResourceStockpile& getResourceStockpile() const { return resources; }
-    const FocusTree& getFocusTree() const { return focusTree; }
-    const ProductionQueue<Construction>& getConstructionQueue() const { return constructions; }
+    const std::string &getName() const { return name; }
+    const std::vector<Province> &getProvinces() const { return provinces; }
+    const ResourceStockpile &getResourceStockpile() const { return resources; }
+    const FocusTree &getFocusTree() const { return focusTree; }
+    const ProductionQueue<Construction> &getConstructionQueue() const { return constructions; }
+    const std::vector<ProductionLine> &getProductionLines() const { return milLines; }
 };
 
-std::ostream& operator<<(std::ostream& os, const Country& c);
+std::ostream &operator<<(std::ostream &os, const Country &c);
 
 #endif

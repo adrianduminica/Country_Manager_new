@@ -1,43 +1,30 @@
-#include "ProductionLine.h"
-#include <algorithm>
-#include <sstream>
+#include "../headers/ProductionLine.h"
+#include <cmath>
 
-double ProductionLine::defCost(EquipmentType t) {
-    switch (t) {
-        case EquipmentType::Gun: return DEF_G;
-        case EquipmentType::Artillery: return DEF_A;
-        case EquipmentType::AntiAir: return DEF_AA;
-        case EquipmentType::CAS: return DEF_CAS;
+ProductionLine::ProductionLine(EquipmentType t, int f, double eff)
+    : type(t), factories(f), efficiency(eff) {
+    switch (type) {
+        case EquipmentType::Gun: unitCost = 0.5;
+            break;
+        case EquipmentType::Artillery: unitCost = 3.5;
+            break;
+        case EquipmentType::AntiAir: unitCost = 4.0;
+            break;
+        case EquipmentType::CAS: unitCost = 12.0;
+            break;
     }
-    return DEF_G;
-}
-
-ProductionLine::ProductionLine(EquipmentType t, int f, double c)
-    : type(t),
-      factoriesAssigned(std::max(0, f)),
-      unitCost(c > 0 ? c : defCost(t)) {
 }
 
 EquipmentType ProductionLine::getType() const { return type; }
-int ProductionLine::getFactories() const { return factoriesAssigned; }
+int ProductionLine::getFactories() const { return factories; }
+double ProductionLine::getEfficiency() const { return efficiency; }
 double ProductionLine::getUnitCost() const { return unitCost; }
 
-std::string ProductionLine::toString() const {
-    const char *tn =
-            (type == EquipmentType::Gun)
-                ? "Gun"
-                : (type == EquipmentType::Artillery)
-                      ? "Artillery"
-                      : (type == EquipmentType::AntiAir)
-                            ? "AA"
-                            : "CAS";
-
-    std::ostringstream ss;
-    ss << tn << " [factories=" << getFactories()
-            << ", unitCost=" << getUnitCost() << "]";
-    return ss.str();
+void ProductionLine::setFactories(int count) {
+    factories = count;
 }
 
-std::ostream &operator<<(std::ostream &os, const ProductionLine &p) {
-    return os << p.toString();
+long long ProductionLine::calculateDailyOutput() const {
+    double baseOutput = 1000.0;
+    return static_cast<long long>(std::floor((factories * baseOutput) / unitCost));
 }

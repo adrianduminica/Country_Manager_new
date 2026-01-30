@@ -1,35 +1,28 @@
-#ifndef PRODUCTION_LINE_H
-#define PRODUCTION_LINE_H
-
-#include <string>
-#include <ostream>
+#ifndef PRODUCTIONLINE_H
+#define PRODUCTIONLINE_H
 
 enum class EquipmentType { Gun, Artillery, AntiAir, CAS };
 
 class ProductionLine {
     EquipmentType type;
-    int factoriesAssigned;
+    int factories;
+    double efficiency;
     double unitCost;
 
-    static constexpr double DEF_G = 10;
-    static constexpr double DEF_A = 50;
-    static constexpr double DEF_AA = 40;
-    static constexpr double DEF_CAS = 200;
-
-    static double defCost(EquipmentType t);
-
 public:
-    ProductionLine(EquipmentType t, int f, double c);
+    ProductionLine(EquipmentType t, int f, double eff);
 
     EquipmentType getType() const;
 
     int getFactories() const;
 
+    double getEfficiency() const;
+
     double getUnitCost() const;
 
-    std::string toString() const;
+    void setFactories(int count);
+
+    long long calculateDailyOutput() const;
 };
 
-std::ostream &operator<<(std::ostream &os, const ProductionLine &p);
-
-#endif // PRODUCTION_LINE_H
+#endif

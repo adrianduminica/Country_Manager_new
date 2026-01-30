@@ -28,7 +28,7 @@ struct ClickZone {
 };
 
 class Interface {
-    Engine& engine;
+    Engine &engine;
     sf::RenderWindow window;
 
     sf::Texture mapTexture;
@@ -47,7 +47,7 @@ class Interface {
     sf::Text roFuelText, roManpowerText;
     sf::Text huFuelText, huManpowerText;
 
-    std::vector<std::vector<ProvinceUI>> provinceUI;
+    std::vector<std::vector<ProvinceUI> > provinceUI;
     std::vector<ClickZone> clickZones;
     int selectedCountryIndex = -1;
 
@@ -65,16 +65,31 @@ class Interface {
     int selectedBuildingType = -1;
     sf::Text queueTitleText;
 
+    bool showProduction = false;
+    sf::Texture gunTex, artTex, aaTex, casTex;
+    sf::Texture plusTex, minusTex;
+    sf::Text prodTitleText;
+    sf::Sprite addNewIcons[4];
+
     void handleEvents();
+
     void render();
+
     void updateUI();
+
     void setupProvinceUI();
+
     void setupFocusUI();
+
     void setupConstructionUI();
-    sf::Vector2f getIconPositionFor(const std::string& countryName, const std::string& provinceName, StatKind kind);
+
+    void setupProductionUI();
+
+    sf::Vector2f getIconPositionFor(const std::string &countryName, const std::string &provinceName, StatKind kind);
 
 public:
-    explicit Interface(Engine& eng, const std::string& title = "Country Manager UI");
+    explicit Interface(Engine &eng, const std::string &title = "Country Manager UI");
+
     void run();
 };
 
