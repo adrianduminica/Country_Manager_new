@@ -1,4 +1,6 @@
 #include "../headers/Province.h"
+#include "../headers/ResourceFactory.h"
+#include "../headers/Utils.h"
 #include <sstream>
 #include <algorithm>
 
@@ -26,8 +28,9 @@ Province::Province(std::string name,
     if (population < 0)    population = 0;
     if (civFactories < 0)  civFactories = 0;
     if (milFactories < 0)  milFactories = 0;
-    if (infrastructure < 0) infrastructure = 0;
-    if (infrastructure > 10) infrastructure = 10;
+
+
+    infrastructure = GameUtils::ensureRange<int>(infrastructure, 0, 10);
 
     if (steel < 0)    this->steel    = 0;
     if (tungsten < 0) this->tungsten = 0;
@@ -71,38 +74,33 @@ Province& Province::operator=(Province other) {
 void Province::initResources() {
     resources.clear();
 
+
+
     if (steel > 0)
-        resources.push_back(std::make_unique<MaterialResource>("Steel", steel));
+        resources.push_back(ResourceFactory::createMaterial("Steel", steel));
     if (aluminum > 0)
-        resources.push_back(std::make_unique<MaterialResource>("Aluminum", aluminum));
+        resources.push_back(ResourceFactory::createMaterial("Aluminum", aluminum));
     if (tungsten > 0)
-        resources.push_back(std::make_unique<MaterialResource>("Tungsten", tungsten));
+        resources.push_back(ResourceFactory::createMaterial("Tungsten", tungsten));
     if (chromium > 0)
-        resources.push_back(std::make_unique<MaterialResource>("Chromium", chromium));
+        resources.push_back(ResourceFactory::createMaterial("Chromium", chromium));
 
     if (oil > 0)
-        resources.push_back(std::make_unique<DailyOutputResource>("Oil", oil, 5));
+        resources.push_back(ResourceFactory::createDailyOutput("Oil", oil, 5));
 
     if (civFactories > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Civ factories", civFactories, ConstructionType::Civ));
+        resources.push_back(ResourceFactory::createConstruction("Civ factories", civFactories, ConstructionType::Civ));
     if (milFactories > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Mil factories", milFactories, ConstructionType::Mil));
+        resources.push_back(ResourceFactory::createConstruction("Mil factories", milFactories, ConstructionType::Mil));
     if (infrastructure > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Infrastructure", infrastructure, ConstructionType::Infra));
+        resources.push_back(ResourceFactory::createConstruction("Infrastructure", infrastructure, ConstructionType::Infra));
 
     if (dockyards > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Dockyards", dockyards, ConstructionType::Dockyard));
+        resources.push_back(ResourceFactory::createConstruction("Dockyards", dockyards, ConstructionType::Dockyard));
     if (airfields > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Airfields", airfields, ConstructionType::Airfield));
+        resources.push_back(ResourceFactory::createConstruction("Airfields", airfields, ConstructionType::Airfield));
 
-    if (armyRF > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Army RF", armyRF, ConstructionType::ArmyRF));
-    if (navalRF > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Naval RF", navalRF, ConstructionType::NavalRF));
-    if (aerialRF > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Aerial RF", aerialRF, ConstructionType::AerialRF));
-    if (nuclearRF > 0)
-        resources.push_back(std::make_unique<ConstructionResource>("Nuclear RF", nuclearRF, ConstructionType::NuclearRF));
+
 }
 
 void Province::addCiv(int x) {
@@ -116,7 +114,8 @@ void Province::addMil(int x) {
 }
 
 void Province::addInfra(int x) {
-    infrastructure = std::min(10, std::max(0, infrastructure + x));
+
+    infrastructure = GameUtils::ensureRange<int>(infrastructure + x, 0, 10);
     initResources();
 }
 
@@ -139,12 +138,7 @@ void Province::applyResourceEffects(ResourceStockpile& stockpile) const {
 int Province::totalConstructionSlotsFromResources() const {
     int total = 0;
     for (const auto& res : resources) {
-
-
         if (auto* cr = dynamic_cast<const ConstructionResource*>(res.get())) {
-
-
-
             if (cr->getType() != ConstructionType::Infra) {
                 total += cr->getAmount();
             }
@@ -174,7 +168,6 @@ std::string Province::toString() const {
     ss << ", RES_OBJS={";
     for (std::size_t i = 0; i < resources.size(); ++i) {
         resources[i]->print(ss);
-
         if (i + 1 < resources.size()) ss << "; ";
     }
     ss << "}";

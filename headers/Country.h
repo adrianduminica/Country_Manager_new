@@ -11,6 +11,7 @@
 #include "ProductionLine.h"
 #include "Construction.h"
 #include "FocusTree.h"
+#include "ProductionQueue.h" // <--- Includem Clasa Sablon
 
 class Country {
     std::string name;
@@ -18,8 +19,11 @@ class Country {
     std::vector<Province> provinces;
     ResourceStockpile resources;
     EquipmentStockpile equipment;
-    std::vector<ProductionLine> milLines;
-    std::vector<Construction> constructions;
+
+
+    ProductionQueue<ProductionLine> milLines;
+    ProductionQueue<Construction> constructions;
+
     FocusTree focusTree;
 
     static constexpr int MIL_OUTPUT = 1000;

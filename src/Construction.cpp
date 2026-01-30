@@ -1,4 +1,5 @@
-#include "Construction.h"
+#include "../headers/Construction.h"
+#include "../headers/Utils.h"
 #include <sstream>
 
 Construction::Construction(BuildingType type, int provinceIndex, double totalCost)
@@ -9,6 +10,9 @@ Construction::Construction(BuildingType type, int provinceIndex, double totalCos
 
 bool Construction::progress(double dailyBP) {
     remainingBP -= dailyBP;
+
+    remainingBP = GameUtils::ensureRange<double>(remainingBP, 0.0, totalCost);
+
     return remainingBP <= 0;
 }
 

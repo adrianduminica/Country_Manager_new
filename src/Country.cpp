@@ -1,5 +1,5 @@
-#include "Country.h"
-#include "GameExceptions.h"
+#include "../headers/Country.h"
+#include "../headers/GameExceptions.h"
 #include <sstream>
 #include <cmath>
 #include <cstdlib>
@@ -80,7 +80,8 @@ int Country::totalChromium() const {
 }
 
 void Country::addProductionLine(EquipmentType t, int factories) {
-    milLines.emplace_back(t, factories, -1.0);
+    // MODIFICARE: .add() in loc de .emplace_back()
+    milLines.add(ProductionLine(t, factories, -1.0));
 }
 
 void Country::startFocus(int index) {
@@ -108,7 +109,8 @@ void Country::addConstruction(BuildingType type, int provinceIndex, int count) {
     }
 
     for (int i = 0; i < count; ++i) {
-        constructions.emplace_back(type, provinceIndex, cost);
+
+        constructions.add(Construction(type, provinceIndex, cost));
     }
 }
 
@@ -116,6 +118,7 @@ void Country::simulateDay() {
     for (const auto& p : provinces) {
         p.applyResourceEffects(resources);
     }
+
 
     for (const auto& l : milLines) {
         long long units = static_cast<long long>(
@@ -135,7 +138,8 @@ void Country::simulateDay() {
 
     double dailyBP = totalCiv() * CIV_OUTPUT_PER_DAY;
 
-    if (!constructions.empty()) {
+
+    if (!constructions.isEmpty()) {
         Construction& c = constructions.front();
         if (c.progress(dailyBP)) {
             int idx = c.getProvinceIndex();
@@ -148,7 +152,7 @@ void Country::simulateDay() {
                     default:                     provinces[idx].addAirfield(1); break;
                 }
             }
-            constructions.erase(constructions.begin());
+            constructions.removeFirst();
         }
     }
 

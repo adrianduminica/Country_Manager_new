@@ -77,6 +77,10 @@ add_executable(${PROJECT_NAME}
         headers/ResourceBase.h
         src/GameExceptions.cpp
         headers/GameExceptions.h
+        headers/Utils.h
+        headers/ProductionQueue.h
+        headers/ResourceFactory.h
+        headers/CountryBuilder.h
 )
 
 include(cmake/CompilerFlags.cmake)
